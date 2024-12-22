@@ -3,7 +3,7 @@ from django.core.validators import MinValueValidator
 
 class Course(models.Model):
     course_id = models.AutoField(primary_key=True)
-    academy = models.ForeignKey('academy.Academy', on_delete=models.CASCADE, related_name='courses')
+    academy = models.ForeignKey('academy.Academy', on_delete=models.CASCADE, related_name='course')
     course_name = models.CharField(max_length=255)
     course_description = models.TextField()
     course_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
