@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'course.apps.CourseConfig',  # AppConfig를 사용하여 앱 등록
 ]
 
 MIDDLEWARE = [
