@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static # Django 프로젝트에서 정적 파일을 제공하기 위한 URL 패턴을 생성
 from . import settings
 from . import views
 
@@ -23,3 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("",views.Homeview.as_view(), name='index')
 ]
+
+# 개발 환경에서 정적 파일 제공
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
