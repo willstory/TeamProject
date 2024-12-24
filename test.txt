@@ -1,6 +1,0 @@
-test
-main branch
-course branch
-
-main branch
-course branch
