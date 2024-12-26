@@ -1,4 +1,5 @@
-from django.views import generic
+from django.views.generic import TemplateView
 
-class Homeview(generic.TemplateView):
-    template_name='home.html'
+# 메인 페이지
+class Homeview(TemplateView):
+    template_name = 'home.html'  # 템플릿 파일명

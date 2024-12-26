@@ -23,7 +23,8 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("",views.Homeview.as_view(), name='index')
+    path('', views.Homeview.as_view(), name='index'),  # 메인 페이지
+    path('acad/', include('acad.urls')),               # acad 앱 연결
 ]
 
 # 개발 환경에서 정적 파일 제공
