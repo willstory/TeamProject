@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center bg-primary text-white">
+                    <h2>로그인 페이지</h2>
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'login' %}" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <small>Don't have an account? <a href="{% url 'register' %}">Sign up here</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
