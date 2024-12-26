@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학원 찾기</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9ff;
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      background-color: #f4f4fc;
+    }
+
+    header h1 {
+      font-size: 24px;
+      color: #4c00ff;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 16px;
+      color: #666;
+    }
+
+    .search-bar {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .search-bar input {
+      width: 80%;
+      max-width: 600px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 15px;
+    }
+
+    .card-content h3 {
+      font-size: 18px;
+      margin: 0;
+      color: #4c00ff;
+    }
+
+    .card-content p {
+      font-size: 14px;
+      color: #555;
+      margin: 10px 0;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-top: 1px solid #eee;
+      background: #f9f9ff;
+    }
+
+    .card-footer span {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .load-more {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .load-more button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #4c00ff;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .load-more button:hover {
+      background-color: #3a00cc;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>나에게 맞는 학원을 찾아보세요.</h1>
+  <p>부족한 과목을 찾아보고 자신에게 맞는 선생님이 추천이 있습니다. 바로 확인하세요.</p>
+</header>
+
+<div class="search-bar">
+  <input type="text" placeholder="Search">
+</div>
+
+<div class="card-container">
+  <div class="card">
+    <img src="image1.jpg" alt="학원 이미지">
+    <div class="card-content">
+      <h3>무한 수학 대치점</h3>
+      <p>수학은 개념이 중요합니다. 개념을 바로 잡는 수학이 제일 잘합니다.</p>
+    </div>
+    <div class="card-footer">
+      <span>김대명 수학</span>
+      <span>2024 01 01 - 2024 03 31</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="image2.jpg" alt="학원 이미지">
+    <div class="card-content">
+      <h3>[파고다] 영어 강남점</h3>
+      <p>수학은 개념이 중요합니다. 개념을 바로 잡는 수학이 제일 잘합니다.</p>
+    </div>
+    <div class="card-footer">
+      <span>Phoenix Baker</span>
+      <span>19 Jan 2022</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="image3.jpg" alt="학원 이미지">
+    <div class="card-content">
+      <h3>[파고다] 영어 강남점</h3>
+      <p>수학은 개념이 중요합니다. 개념을 바로 잡는 수학이 제일 잘합니다.</p>
+    </div>
+    <div class="card-footer">
+      <span>Lana Steiner</span>
+      <span>18 Jan 2022</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="image4.jpg" alt="학원 이미지">
+    <div class="card-content">
+      <h3>[파고다] 영어 강남점</h3>
+      <p>수학은 개념이 중요합니다. 개념을 바로 잡는 수학이 제일 잘합니다.</p>
+    </div>
+    <div class="card-footer">
+      <span>Alec Whitten</span>
+      <span>17 Jan 2022</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="image5.jpg" alt="학원 이미지">
+    <div class="card-content">
+      <h3>[파고다] 언어 강남점</h3>
+      <p>수학은 개념이 중요합니다. 개념을 바로 잡는 수학이 제일 잘합니다.</p>
+    </div>
+    <div class="card-footer">
+      <span>Demi Wilkinson</span>
+      <span>16 Jan 2022</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="image6.jpg" alt="학원 이미지">
+    <div class="card-content">
+      <h3>[파고다] 과학 홍대점</h3>
+      <p>수학은 개념이 중요합니다. 개념을 바로 잡는 수학이 제일 잘합니다.</p>
+    </div>
+    <div class="card-footer">
+      <span>Candice Wu</span>
+      <span>15 Jan 2022</span>
+    </div>
+  </div>
+</div>
+
+<div class="load-more">
+  <button>Load more</button>
+</div>
+
+</body>
+</html>
