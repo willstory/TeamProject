@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'course.apps.CourseConfig',
     'member',
     'academy',
+    'acad',
 
 ]
 

@@ -1,6 +1,7 @@
 from django.urls import reverse_lazy
 from django.views import generic
 from member.forms import MemberCreationForm  # 커스텀 사용자 모델을 위한 폼
+from django.views.generic import TemplateView
 
 class HomeView(generic.TemplateView):
     template_name = 'home.html'
