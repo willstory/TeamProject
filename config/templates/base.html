@@ -182,7 +182,25 @@
             }
         }
 
+        /* Dropdown Menu Styles */
+        .dropdown-menu {
+            border-radius: 0.5rem !important; /* 둥근 모서리 */
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important; /* 부드러운 그림자 */
+            background-color: var(--light-color) !important; /* 배경색 변경 */
+            border: none !important; /* 테두리 제거 */
+        }
+        .dropdown-item {
+            transition: background-color 0.2s ease !important; /* 배경색 전환 효과 */
+            padding: 0.75rem 1.5rem !important; /* 패딩 조정 */
+            font-weight: 500 !important; /* 글꼴 두께 조정 */
+            color: var(--dark-color) !important; /* 글꼴 색상 */
+        }
+        .dropdown-item:hover {
+            background-color: rgba(255, 107, 107, 0.1) !important; /* 호버 시 배경색 변경 */
+            color: var(--primary-color) !important; /* 호버 시 글꼴 색상 변경 */
+        }
     </style>
+</head>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg sticky-top">
@@ -205,15 +223,21 @@
                 
                 <div class="d-flex align-items-center gap-2">
                     {% if user.is_authenticated %}
-                        <form method="post" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button class="btn btn-outline-primary" type="submit">
-                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user me-1"></i>{{ user.username }}
                             </button>
-                        </form>
-                        <a class="btn btn-outline-secondary" href="{% url 'password_change'%}">
-                            <i class="fas fa-user me-1"></i>{{ user.username }}
-                        </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="#" style="font-weight: 500;">마이페이지</a></li>
+                                <li><a class="dropdown-item" href="#" style="font-weight: 500;">메시지 박스</a></li>
+                                <li>
+                                    <form method="post" action="{% url 'logout' %}" class="m-0">
+                                        {% csrf_token %}
+                                        <button class="dropdown-item" type="submit" style="font-weight: 500;">로그아웃</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     {% else %}
                         <a class="btn btn-primary small-btn" href="{% url 'login' %}"><i class="fas fa-sign-in-alt me-1"></i>로그인</a>
                         <a class="btn btn-outline-primary small-btn" href="{% url 'register' %}"><i class="fas fa-user-plus me-1"></i>회원가입</a>

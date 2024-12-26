@@ -10,19 +10,36 @@
                 <div class="card-body">
                     <form action="" method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
-                        {% for field in form %}
-                            <div class="mb-3">
-                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                {{ field|add_class:"form-control" }}  <!-- add_class 필터를 사용하려면 커스텀 필터가 필요합니다. -->
-                                {% if field.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {% for error in field.errors %}
-                                            <div>{{ error }}</div>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
+                        
+                        <!-- 회원 유형 선택 -->
+                        <div class="mb-3">
+                            <label class="form-label">회원 유형</label>
+                            <div class="d-flex align-items-center">
+                                <input type="radio" id="student" name="user_type" value="student" checked>
+                                <span class="ms-2">일반 수강생회원</span>
+                                <i class="fas fa-check-circle ms-2" style="color: green;"></i>
                             </div>
+                            <div class="d-flex align-items-center mt-2">
+                                <input type="radio" id="academy" name="user_type" value="academy">
+                                <span class="ms-2">학원(학원장)</span>
+                                <i class="fas fa-check-circle ms-2" style="color: green; display: none;"></i>
+                            </div>
+                        </div>
+
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                            {{ field|add_class:"form-control" }}
+                            {% if field.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in field.errors %}
+                                <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
                         {% endfor %}
+                        
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">회원가입</button>
                         </div>
@@ -36,4 +53,23 @@
     </div>
 </div>
 
+<script>
+    // 라디오 버튼 선택 시 체크 아이콘 표시
+    const radios = document.querySelectorAll('input[name="user_type"]');
+    radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // 모든 체크 아이콘 숨기기
+            document.querySelectorAll('.fa-check-circle').forEach(icon => {
+                icon.style.display = 'none';
+            });
+            // 선택된 라디오 버튼의 체크 아이콘 표시
+            if (this.checked) {
+                this.nextElementSibling.nextElementSibling.style.display = 'inline';
+            }
+        });
+    });
+
+    // 페이지 로드 시 기본값으로 수강생 체크 아이콘 표시
+    document.querySelector('input[name="user_type"]:checked').nextElementSibling.nextElementSibling.style.display = 'inline';
+</script>
 {% endblock %}
