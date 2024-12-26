@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.urls import reverse_lazy
 from django.views import generic
 from member.forms import MemberCreationForm  # 커스텀 사용자 모델을 위한 폼
@@ -12,3 +13,10 @@ class UserCreateView(generic.CreateView):
 
 class UserCreateDoneTV(generic.TemplateView):
     template_name = 'registration/register_done.html'
+=======
+from django.views.generic import TemplateView
+
+# 메인 페이지
+class Homeview(TemplateView):
+    template_name = 'home.html'  # 템플릿 파일명
+>>>>>>> main
