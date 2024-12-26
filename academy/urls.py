@@ -1,10 +1,11 @@
-from django.urls import path
+from django.contrib import admin
+from django.urls import path, include
 from . import views
 
 app_name = 'academy'
 
 urlpatterns = [
-    path('', views.academy_list, name='academy_list'),
+    path('academy_list/', views.academy_list, name='academy_list'),
     path('<int:academy_id>/', views.academy_detail, name='academy_detail'),
     path('create/', views.academy_create, name='academy_create'),
     path('<int:academy_id>/edit/', views.academy_edit, name='academy_edit'),
