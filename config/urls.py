@@ -23,7 +23,11 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("",views.Homeview.as_view(), name='index')
+    path("",views.HomeView.as_view(), name='index'),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/register/', views.UserCreateView.as_view(), name='register'),
+    path('accounts/register/done/', views.UserCreateDoneTV.as_view(), name='register_done'),
+    path('acad/', include('acad.urls')),               # acad 앱 연결
 ]
 
 # 개발 환경에서 정적 파일 제공

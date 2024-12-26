@@ -3,97 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Map-Themed Background</title>
+    <title>학원의 민족</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            background-color: #f3e5f5; /* Light purple */
-            color: #333; /* Dark text for contrast */
-            font-family: 'Arial', sans-serif;
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --dark-color: #2C3E50;
+            --light-color: #F7F9FC;
         }
 
+        html, body {
+            height: 100%; /* html과 body의 높이를 100%로 설정 */
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        }
+
+        /* Navbar Styles */
         .navbar {
-            background-color: white; /* White background for header */
-            border-bottom: 1px solid #ddd;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .navbar-brand img {
-            border-radius: 5px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
         }
 
-        .navbar-nav .nav-link {
-            color: #333 !important; /* Dark text for better contrast on white */
-            margin-right: 1rem;
+        .navbar-brand:hover img {
+            transform: scale(1.05);
         }
 
-        .navbar-nav .nav-link.active {
-            font-weight: bold;
-            color: #e50914 !important; /* Highlighted with Netflix red */
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-color) !important;
+            padding: 0.5rem 1rem;
+            margin: 0 0.2rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
         }
 
+        .nav-link:hover {
+            background-color: rgba(255, 107, 107, 0.1);
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white !important;
+            margin-right: 20px;
+        }
+
+        /* Search Bar Styles */
+        .search-bar {
+            max-width: 200px;
+            width: 100%;
+        }
+
+        .search-bar .input-group {
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar input {
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .search-bar .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+        }
+
+        .search-bar .btn-primary:hover {
+            background-color: #ff5252;
+        }
+
+        /* Content Area Styles */
         .content-area {
-            background-image: url('https://www.mapbox.com/help/img/screenshots/mapbox-studio/studio_screenshot.png'); /* Replace with desired map image URL */
+            background: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)),
+                        url('https://www.mapbox.com/help/img/screenshots/mapbox-studio/studio_screenshot.png');
             background-size: cover;
             background-position: center;
-            min-height: calc(100vh - 140px); /* Adjust height to fill remaining space */
+            flex: 1; /* flex-grow를 사용하여 남은 공간을 채움 */
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+            padding: 3rem 1rem;
         }
 
-        footer {
-            background-color: white; /* White background for footer */
-            color: #333; /* Dark text for readability */
-            padding: 1rem;
-            text-align: center;
-            border-top: 1px solid #ddd;
+        .content-area h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
         }
+
+        /* Button Styles */
+        .btn {
+            border-radius: 25px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .small-btn {
+            transform: scale(0.9); /* 버튼 크기를 70%로 줄임 */
+            transform-origin: center; /* 변환의 기준점을 중앙으로 설정 */
+            padding: 0.375rem 0.75rem; /* 기본 패딩을 유지하기 위해 조정 */
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.05);
+            margin-top: auto; /* footer를 페이지 하단에 고정 */
+        }
+
+        footer p {
+            margin: 0;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+
+            .content-area h1 {
+                font-size: 2rem;
+            }
+
+            .search-bar {
+                margin: 1rem 0;
+            }
+        }
+
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-          <a class="navbar-brand text-dark px-2" href="#">
-            <img height="40px" src="data:image/jpeg;base64,[BASE64]" alt="Brand">
-            학원의 민족
-          </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">학원</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">학원등록</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">마이페이지</a>
-              </li>              
-            </ul>
-            <form class="d-flex position-relative ms-3" role="search" action="#" method="get">
-              <div class="input-group">
-                <input class="form-control me-2" type="search" id='searchInput' placeholder="Search" aria-label="Search" name="query">
-                <button class="btn btn-primary" type="submit">Search</button>
-              </div>
-            </form>
-          </div>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="nav-link active" href="{% url 'index' %}"><i class="fas fa-home me-1"></i>
+                학원의 민족
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-school me-1"></i>학원</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-plus-circle me-1"></i>학원등록</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center gap-2">
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </button>
+                        </form>
+                        <a class="btn btn-outline-secondary" href="{% url 'password_change'%}">
+                            <i class="fas fa-user me-1"></i>{{ user.username }}
+                        </a>
+                    {% else %}
+                        <a class="btn btn-primary small-btn" href="{% url 'login' %}"><i class="fas fa-sign-in-alt me-1"></i>로그인</a>
+                        <a class="btn btn-outline-primary small-btn" href="{% url 'register' %}"><i class="fas fa-user-plus me-1"></i>회원가입</a>
+                    {% endif %}
+                </div>
+                
+                <form class="d-flex search-bar ms-3" role="search" action="#" method="get">
+                    <div class="input-group">
+                        <input class="form-control" type="search" id='searchInput' placeholder="학원 검색하기..." aria-label="Search" name="query">
+                        <button class="btn btn-primary" type="submit"><i class="fas fa-search me-1"></i></button>
+                    </div>
+                </form>
+                <ul class="navbar-nav ms-3">
+                  <li class="nav-item">
+                    <a class="nav-link text-danger fw-bold" href="http://127.0.0.1:8000/acad">학원관리자</a>
+                  </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
+    {% block content %}
     <div class="content-area">
-        <h1>지도 검색 들어갈 자리</h1>
+        <h1>나에게 맞는 학원을 찾아보세요</h1>
+        <!-- Add more content here as needed -->
     </div>
+    {% endblock %}
 
+    {% block footer %}
     <footer>
-        <p>© 2024 학원의 민족 - All Rights Reserved</p>
+        <div class="container">
+            <p>© 2024 학원의 민족 - 최고의 학원을 최고의 선생님과 함께</p>
+        </div>
     </footer>
+    {% endblock %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
