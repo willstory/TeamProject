@@ -6,7 +6,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from django.shortcuts import redirect, render
-
+from member.views import profile_edit_view
 
 class HomeView(generic.TemplateView):
     template_name = 'home.html'

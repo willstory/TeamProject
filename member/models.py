@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -60,3 +61,15 @@ class Student(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - Student"
+    
+from django.db import models
+from django.contrib.auth.models import User
+
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True)
+    phone_number = models.CharField(max_length=15, blank=True)
+    # 추가적인 필드들을 여기에 정의할 수 있습니다.
+
+    def __str__(self):
+        return self.user.username

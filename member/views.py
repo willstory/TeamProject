@@ -3,6 +3,9 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from .models import User  # User 모델이 member 앱에 정의되어 있다고 가정
 from django.views.generic import TemplateView
+from .forms import ProfileForm
+from .models import Profile
+from django.contrib.auth.decorators import login_required
 
 def signup(request):
     if request.method == 'POST':
@@ -22,3 +25,22 @@ def signup(request):
         form = UserCreationForm()
     
     return render(request, 'registration/register.html', {'form': form})
+
+@login_required
+def profile_edit_view(request):
+    profile = Profile.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('mypage')  # 수정 후 리다이렉트할 URL
+    else:
+        form = ProfileForm(instance=profile)
+
+    return render(request, 'member/profile_edit.html', {'form': form})
+
+@login_required
+def mypage(request):
+    profile = Profile.objects.get(user=request.user)
+    return render(request, 'member/mypage.html', {'profile': profile})

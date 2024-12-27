@@ -35,6 +35,7 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('acad/', academy_dashboard, name='academy_dashboard'),
     path('student/', student_dashboard, name='student_dashboard'),
+    path('profile/edit/', views.profile_edit_view, name='profile_edit'),
 ]
 
 # 개발 환경에서 정적 파일 제공
