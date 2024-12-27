@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 from django.views import generic
-from member.forms import MemberCreationForm  # 커스텀 사용자 모델을 위한 폼
+from member.forms import SignupForm  # 수정된 SignupForm 사용
 from django.views.generic import TemplateView
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.views import LoginView
@@ -13,7 +13,7 @@ class HomeView(generic.TemplateView):
 
 class UserCreateView(generic.CreateView):
     template_name = 'registration/register.html'
-    form_class = MemberCreationForm
+    form_class = SignupForm  # SignupForm 사용
     success_url = reverse_lazy('register_done')
 
     def form_valid(self, form):
@@ -22,7 +22,7 @@ class UserCreateView(generic.CreateView):
 
         if user_type == 'academy':
             user.is_academy = True
-            user.is_active = True  # 학원은 기본적으로 비활성화 상태로 설정
+            user.is_active = True  # 학원은 기본적으로 활성화
         else:
             user.is_academy = False
             user.is_active = True  # 학생은 활성화 상태로 설정
@@ -50,7 +50,11 @@ class CustomLoginView(LoginView):
         return super().form_invalid(form)
 
 def academy_dashboard(request):
+    # 예시 데이터 처리: 학원 대시보드용
+    # 실제로는 학원 관련 정보가 필요할 수 있습니다.
     return render(request, 'academy_dashboard.html')
 
 def student_dashboard(request):
+    # 예시 데이터 처리: 학생 대시보드용
+    # 학생 관련 정보가 필요할 수 있습니다.
     return render(request, 'student_dashboard.html')
