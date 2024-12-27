@@ -20,6 +20,9 @@ from django.conf import settings
 from django.conf.urls.static import static # Django 프로젝트에서 정적 파일을 제공하기 위한 URL 패턴을 생성
 from . import settings
 from . import views
+from .views import CustomLoginView
+from .views import academy_dashboard
+from .views import student_dashboard
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +31,9 @@ urlpatterns = [
     path('accounts/register/', views.UserCreateView.as_view(), name='register'),
     path('accounts/register/done/', views.UserCreateDoneTV.as_view(), name='register_done'),
     path('acad/', include('acad.urls')),               # acad 앱 연결
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('acad/', academy_dashboard, name='academy_dashboard'),
+    path('student/', student_dashboard, name='student_dashboard'),
 ]
 
 # 개발 환경에서 정적 파일 제공

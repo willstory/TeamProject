@@ -16,12 +16,12 @@
                             <label class="form-label">회원 유형</label>
                             <div class="d-flex align-items-center">
                                 <input type="radio" id="student" name="user_type" value="student" checked>
-                                <span class="ms-2">일반 수강생회원</span>
+                                <span class="ms-2">학생이에요</span>
                                 <i class="fas fa-check-circle ms-2" style="color: green;"></i>
                             </div>
                             <div class="d-flex align-items-center mt-2">
                                 <input type="radio" id="academy" name="user_type" value="academy">
-                                <span class="ms-2">학원(학원장)</span>
+                                <span class="ms-2">학원입니다</span>
                                 <i class="fas fa-check-circle ms-2" style="color: green; display: none;"></i>
                             </div>
                         </div>
@@ -40,6 +40,12 @@
                         </div>
                         {% endfor %}
                         
+                        <!-- 사업자등록증 업로드 필드 -->
+                        <div id="business-registration" class="mb-3" style="display: none;">
+                            <label for="business_registration" class="form-label">사업자등록증 업로드</label>
+                            <input type="file" id="business_registration" name="business_registration" class="form-control">
+                        </div>
+
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">회원가입</button>
                         </div>
@@ -54,8 +60,10 @@
 </div>
 
 <script>
-    // 라디오 버튼 선택 시 체크 아이콘 표시
+    // 라디오 버튼 선택 시 체크 아이콘 표시 및 사업자등록증 업로드 필드 표시
     const radios = document.querySelectorAll('input[name="user_type"]');
+    const businessRegistrationField = document.getElementById('business-registration');
+
     radios.forEach(radio => {
         radio.addEventListener('change', function() {
             // 모든 체크 아이콘 숨기기
@@ -65,6 +73,13 @@
             // 선택된 라디오 버튼의 체크 아이콘 표시
             if (this.checked) {
                 this.nextElementSibling.nextElementSibling.style.display = 'inline';
+            }
+
+            // 사업자등록증 업로드 필드 표시/숨기기
+            if (this.value === 'academy') {
+                businessRegistrationField.style.display = 'block';
+            } else {
+                businessRegistrationField.style.display = 'none';
             }
         });
     });

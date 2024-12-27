@@ -216,9 +216,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fas fa-school me-1"></i>학원</a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fas fa-plus-circle me-1"></i>학원등록</a>
-                    </li>
+                    </li> -->
                 </ul>
                 
                 <div class="d-flex align-items-center gap-2">
@@ -246,14 +246,23 @@
                 
                 <form class="d-flex search-bar ms-3" role="search" action="#" method="get">
                     <div class="input-group">
-                        <input class="form-control" type="search" id='searchInput' placeholder="학원 검색하기..." aria-label="Search" name="query">
+                        <input class="form-control" type="search" id='searchInput' placeholder="검색하기..." aria-label="Search" name="query">
                         <button class="btn btn-primary" type="submit"><i class="fas fa-search me-1"></i></button>
                     </div>
                 </form>
                 <ul class="navbar-nav ms-3">
-                  <li class="nav-item">
-                    <a class="nav-link text-danger fw-bold" href="http://127.0.0.1:8000/acad">학원관리자</a>
-                  </li>
+                    {% if user.is_authenticated %}
+                        {% if user.is_academy %}
+                            <li class="nav-item">
+                                <a class="nav-link text-danger fw-bold" href="http://127.0.0.1:8000/acad">학원관리자</a>
+                            </li>
+                        {% else %}
+                            <!-- 학생일 경우 다른 메뉴를 추가할 수 있습니다. -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="http://127.0.0.1:8000/student">학생 대시보드</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
                 </ul>
             </div>
         </div>
