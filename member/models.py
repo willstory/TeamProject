@@ -43,6 +43,8 @@ class Member(AbstractUser):
 
 class User(models.Model):
     # User 모델 정의
+    is_academy = models.BooleanField(default=False)
+    business_registration = models.FileField(upload_to='business_registrations/', blank=True, null=True)
     username = models.CharField(max_length=150)
     email = models.EmailField()
 
