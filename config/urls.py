@@ -14,8 +14,11 @@ urlpatterns = [
     path('acad/', include('acad.urls')),  # 'acad.urls'에서 URL을 처리하도록 변경
     path('', include('academy.urls')),
     path('login/', CustomLoginView.as_view(), name='login'),
-    path('profile/edit/', views.profile_edit_view, name='profile_edit'),
+    #path('profile/', views.profile_view, name='profile_view'),
+    #path('profile/edit/', views.profile_edit_view, name='profile_edit'),
+    path('profile/', include('member.urls')),
     path('course/', include('course.urls')),
+    path('member/', include('member.urls')),
 ]
 
 # 개발 환경에서 정적 파일 제공

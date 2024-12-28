@@ -6,6 +6,7 @@ from .forms import ProfileForm
 from .models import Profile, Member
 from django.contrib.auth.decorators import login_required
 from .forms import SignupForm
+from .forms import MemberProfileForm
 
 def signup(request):
     if request.method == 'POST':
@@ -35,6 +36,20 @@ def signup(request):
     return render(request, 'registration/register.html', {'form': form})
 
 @login_required
+def profile_view(request):
+    member = request.user
+
+    if request.method == 'POST':
+        form = MemberProfileForm(request.POST, instance=member)
+        if form.is_valid():
+            form.save()
+            return redirect('member:profile')  # 수정 후 프로필 페이지로 리디렉트
+    else:
+        form = MemberProfileForm(instance=member)
+
+    return render(request, 'member/profile_view.html', {'form': form, 'member': member})
+
+@login_required
 def profile_edit_view(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
 
@@ -42,7 +57,7 @@ def profile_edit_view(request):
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('mypage')  # 수정 후 리디렉트할 URL
+            return redirect('member:mypage')  # 수정 후 mypage로 리디렉트
     else:
         form = ProfileForm(instance=profile)
 

@@ -19,3 +19,8 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['bio', 'phone_number']  # bio와 phone_number 필드를 수정 가능하게 설정
+
+class MemberProfileForm(forms.ModelForm):
+    class Meta:
+        model = Member
+        fields = ['phone', 'address', 'age']

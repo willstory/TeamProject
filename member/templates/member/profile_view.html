@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>프로필</h2>
+
+    <div class="profile-info">
+        <p><strong>아이디:</strong> {{ member.username }}</p>
+        <p><strong>전화번호:</strong> {{ member.phone }}</p>
+        <p><strong>주소:</strong> {{ member.address }}</p>
+        <p><strong>나이:</strong> {{ member.age }}</p>
+        <button class="btn btn-warning" id="editProfileBtn">수정</button>
+    </div>
+
+    <div id="editProfileForm" style="display:none;">
+        <h3>프로필 수정</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">저장</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 수정 버튼 클릭 시 수정 폼을 표시
+    document.getElementById('editProfileBtn').addEventListener('click', function() {
+        document.querySelector('.profile-info').style.display = 'none';
+        document.getElementById('editProfileForm').style.display = 'block';
+    });
+</script>
+
+{% endblock %}

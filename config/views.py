@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 from member.forms import SignupForm  # 수정된 SignupForm 사용
 from django.views.generic import TemplateView
@@ -10,6 +10,12 @@ from member.views import profile_edit_view
 
 class HomeView(generic.TemplateView):
     template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # 'member:profile_view'를 사용하여 URL을 찾습니다.
+        context['profile_url'] = reverse('member:profile_view')
+        return context
 
 class UserCreateView(generic.CreateView):
     template_name = 'registration/register.html'
