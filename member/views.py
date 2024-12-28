@@ -72,7 +72,7 @@ def change_password_view(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)  # 세션에 새로운 비밀번호 업데이트
-            return redirect('member:profile')
+            return redirect('member:profile_view')
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'member/change_password.html', {'form': form})

@@ -23,10 +23,21 @@ class ProfileForm(forms.ModelForm):
 class MemberProfileEditForm(forms.ModelForm):
     class Meta:
         model = Member
-        fields = ['phone', 'address', 'age', 'business_registration', 'gps_enabled']  # gps_enabled 추가
+        fields = ['phone', 'address', 'age', 'gps_enabled']  # 기본 필드 설정
 
     phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '전화번호'}))
     address = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': '주소'}))
     age = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '나이'}))
-    business_registration = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control'}), required=False)
     gps_enabled = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))  # GPS 사용 여부 체크박스
+
+    # __init__ 메서드 오버라이드: is_academy에 따라 business_registration 필드를 동적으로 추가
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.is_academy:  # 만약 사용자가 학원일 경우
+            self.fields['business_registration'] = forms.FileField(
+                widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
+                required=False
+            )
+        else:
+            # 학원이 아닌 경우에는 해당 필드를 삭제
+            self.fields.pop('business_registration', None)

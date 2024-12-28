@@ -55,9 +55,9 @@
 </div>
 
 <script>
-    // 라디오 버튼과 사업자등록증 필드 요소 선택
     const radios = document.querySelectorAll('input[name="user_type"]');
     const businessRegistrationField = document.querySelector('[name="business_registration"]').closest('.mb-3');
+    const gpsCheckbox = document.querySelector('input[name="gps_enabled"]');
     const checkIcons = document.querySelectorAll('.fa-check-circle');
 
     function updateUI(selectedValue) {
@@ -84,6 +84,11 @@
     const initialRadio = document.querySelector('input[name="user_type"]:checked');
     if (initialRadio) {
         updateUI(initialRadio.value);
+    }
+
+    // GPS 기본값 체크
+    if (gpsCheckbox) {
+        gpsCheckbox.checked = true;
     }
 </script>
 

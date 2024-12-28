@@ -7,7 +7,6 @@
         <div class="col-md-3">
             <div class="list-group">
                 <a href="{% url 'member:profile_view' %}" class="list-group-item list-group-item-action">내 프로필</a>
-                <a href="{% url 'member:profile_edit' %}" class="list-group-item list-group-item-action">프로필 수정</a>
                 <a href="{% url 'member:change_password' %}" class="list-group-item list-group-item-action">패스워드 변경</a>
             </div>
         </div>
@@ -15,18 +14,70 @@
         <!-- 오른쪽 내용 -->
         <div class="col-md-9">
             <!-- 내 프로필 내용 -->
-            <div id="profile_content">
-                <h2>내 프로필</h2>
-                <p><strong>아이디:</strong> {{ member.username }}</p>
-                <p><strong>회원 타입:</strong> {{ member.get_member_type_display }}</p>
-                <p><strong>전화번호:</strong> {{ member.phone }}</p>
-                <p><strong>주소:</strong> {{ member.address }}</p>
-                <p><strong>나이:</strong> {{ member.age }}</p>
-                <p><strong>전화번호 인증 여부:</strong> {% if member.phone_verified %} 인증됨 {% else %} 인증되지 않음 {% endif %}</p>
-                <p><strong>GPS 사용 여부:</strong> {% if member.gps_enabled %} 활성화됨 {% else %} 비활성화됨 {% endif %}</p>
-                <p><strong>학원 여부:</strong> {% if member.is_academy %} 학원 운영자 {% else %} 일반회원 {% endif %}</p>
-                <p><strong>사업자 등록 파일:</strong> {% if member.business_registration %} <a href="{{ member.business_registration.url }}" target="_blank">파일 보기</a> {% else %} 없음 {% endif %}</p>
-                <a href="{% url 'member:profile_edit' %}" class="btn btn-warning">수정</a>
+            <div id="profile_content" class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">내 프로필</h2>
+                </div>
+                <div class="card-body">
+                    <!-- 블록 스타일로 프로필 테이블 꾸미기 -->
+                    <div class="profile-section mb-4 p-3 border rounded bg-light">
+                        <h5 class="text-primary">기본 정보</h5>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>아이디:</strong></div>
+                            <div class="col-sm-8">{{ member.username }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>회원 타입:</strong></div>
+                            <div class="col-sm-8">{{ member.get_member_type_display }}</div>
+                        </div>
+                    </div>
+                    <div class="profile-section mb-4 p-3 border rounded bg-light">
+                        <h5 class="text-primary">연락처</h5>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>전화번호:</strong></div>
+                            <div class="col-sm-8">{{ member.phone }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>주소:</strong></div>
+                            <div class="col-sm-8">{{ member.address }}</div>
+                        </div>
+                    </div>
+                    <div class="profile-section mb-4 p-3 border rounded bg-light">
+                        <h5 class="text-primary">기타 정보</h5>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>나이:</strong></div>
+                            <div class="col-sm-8">{{ member.age }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>GPS 사용 여부:</strong></div>
+                            <div class="col-sm-8">
+                                {% if member.gps_enabled %}
+                                    <span class="badge bg-success">활성화됨</span>
+                                {% else %}
+                                    <span class="badge bg-danger">비활성화되지 않음</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if member.is_academy %}
+                    <div class="profile-section mb-4 p-3 border rounded bg-light">
+                        <h5 class="text-primary">학원 정보</h5>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>사업자 등록 파일:</strong></div>
+                            <div class="col-sm-8">
+                                {% if member.business_registration %}
+                                    <a href="{{ member.business_registration.url }}" target="_blank" class="btn btn-sm btn-primary">파일 보기</a>
+                                {% else %}
+                                    <span class="text-muted">없음</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-end">
+                    <a href="{% url 'member:profile_edit' %}" class="btn btn-warning">수정</a>
+                </div>
             </div>
         </div>
     </div>
