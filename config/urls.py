@@ -11,12 +11,12 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register/', views.UserCreateView.as_view(), name='register'),
     path('accounts/register/done/', views.UserCreateDoneTV.as_view(), name='register_done'),
-    path('acad/', include('acad.urls')),  # 'acad.urls'에서 URL을 처리하도록 변경
-    path('', include('academy.urls')),
     path('login/', CustomLoginView.as_view(), name='login'),
     #path('profile/', views.profile_view, name='profile_view'),
     #path('profile/edit/', views.profile_edit_view, name='profile_edit'),
-    path('profile/', include('member.urls')),
+    #path('profile/', include('member.urls')),
+    path('acad/', include('acad.urls')),  # 'acad.urls'에서 URL을 처리하도록 변경
+    path('', include('academy.urls')),
     path('course/', include('course.urls')),
     path('member/', include('member.urls')),
 ]

@@ -20,7 +20,13 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['bio', 'phone_number']  # bio와 phone_number 필드를 수정 가능하게 설정
 
-class MemberProfileForm(forms.ModelForm):
+class MemberProfileEditForm(forms.ModelForm):
     class Meta:
         model = Member
-        fields = ['phone', 'address', 'age']
+        fields = ['phone', 'address', 'age', 'business_registration', 'gps_enabled']  # gps_enabled 추가
+
+    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '전화번호'}))
+    address = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': '주소'}))
+    age = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '나이'}))
+    business_registration = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control'}), required=False)
+    gps_enabled = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))  # GPS 사용 여부 체크박스

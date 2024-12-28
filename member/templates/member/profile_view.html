@@ -2,32 +2,33 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2>프로필</h2>
+    <div class="row">
+        <!-- 사이드바 -->
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{% url 'member:profile_view' %}" class="list-group-item list-group-item-action">내 프로필</a>
+                <a href="{% url 'member:profile_edit' %}" class="list-group-item list-group-item-action">프로필 수정</a>
+                <a href="{% url 'member:change_password' %}" class="list-group-item list-group-item-action">패스워드 변경</a>
+            </div>
+        </div>
 
-    <div class="profile-info">
-        <p><strong>아이디:</strong> {{ member.username }}</p>
-        <p><strong>전화번호:</strong> {{ member.phone }}</p>
-        <p><strong>주소:</strong> {{ member.address }}</p>
-        <p><strong>나이:</strong> {{ member.age }}</p>
-        <button class="btn btn-warning" id="editProfileBtn">수정</button>
-    </div>
-
-    <div id="editProfileForm" style="display:none;">
-        <h3>프로필 수정</h3>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">저장</button>
-        </form>
+        <!-- 오른쪽 내용 -->
+        <div class="col-md-9">
+            <!-- 내 프로필 내용 -->
+            <div id="profile_content">
+                <h2>내 프로필</h2>
+                <p><strong>아이디:</strong> {{ member.username }}</p>
+                <p><strong>회원 타입:</strong> {{ member.get_member_type_display }}</p>
+                <p><strong>전화번호:</strong> {{ member.phone }}</p>
+                <p><strong>주소:</strong> {{ member.address }}</p>
+                <p><strong>나이:</strong> {{ member.age }}</p>
+                <p><strong>전화번호 인증 여부:</strong> {% if member.phone_verified %} 인증됨 {% else %} 인증되지 않음 {% endif %}</p>
+                <p><strong>GPS 사용 여부:</strong> {% if member.gps_enabled %} 활성화됨 {% else %} 비활성화됨 {% endif %}</p>
+                <p><strong>학원 여부:</strong> {% if member.is_academy %} 학원 운영자 {% else %} 일반회원 {% endif %}</p>
+                <p><strong>사업자 등록 파일:</strong> {% if member.business_registration %} <a href="{{ member.business_registration.url }}" target="_blank">파일 보기</a> {% else %} 없음 {% endif %}</p>
+                <a href="{% url 'member:profile_edit' %}" class="btn btn-warning">수정</a>
+            </div>
+        </div>
     </div>
 </div>
-
-<script>
-    // 수정 버튼 클릭 시 수정 폼을 표시
-    document.getElementById('editProfileBtn').addEventListener('click', function() {
-        document.querySelector('.profile-info').style.display = 'none';
-        document.getElementById('editProfileForm').style.display = 'block';
-    });
-</script>
-
 {% endblock %}

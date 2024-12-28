@@ -1,12 +1,11 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import TemplateView
-from .forms import ProfileForm
-from .models import Profile, Member
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, update_session_auth_hash
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
-from .forms import SignupForm
-from .forms import MemberProfileForm
+from django.views.generic import TemplateView
+from .models import Profile, Member
+from .forms import SignupForm, ProfileForm, MemberProfileEditForm
+
 
 def signup(request):
     if request.method == 'POST':
@@ -40,28 +39,43 @@ def profile_view(request):
     member = request.user
 
     if request.method == 'POST':
-        form = MemberProfileForm(request.POST, instance=member)
+        form = MemberProfileEditForm(request.POST, instance=member)
         if form.is_valid():
             form.save()
-            return redirect('member:profile')  # 수정 후 프로필 페이지로 리디렉트
+            return redirect('member:profile_view')  # 수정 후 프로필 페이지로 리디렉트
     else:
-        form = MemberProfileForm(instance=member)
+        form = MemberProfileEditForm(instance=member)
 
     return render(request, 'member/profile_view.html', {'form': form, 'member': member})
 
 @login_required
 def profile_edit_view(request):
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    # 현재 로그인한 사용자에 해당하는 Member 객체를 가져옵니다.
+    member = get_object_or_404(Member, id=request.user.id)
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=profile)
+        # POST 요청 시 폼을 바인딩하고 제출된 데이터를 처리합니다.
+        form = MemberProfileEditForm(request.POST, request.FILES, instance=member)
         if form.is_valid():
-            form.save()
-            return redirect('member:mypage')  # 수정 후 mypage로 리디렉트
+            form.save()  # 유효한 데이터일 경우 저장
+            return redirect('member:profile_view')  # 프로필 뷰로 리디렉션
     else:
-        form = ProfileForm(instance=profile)
+        # GET 요청 시 기존 데이터를 가지고 폼을 초기화합니다.
+        form = MemberProfileEditForm(instance=member)
 
     return render(request, 'member/profile_edit.html', {'form': form})
+
+@login_required
+def change_password_view(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)  # 세션에 새로운 비밀번호 업데이트
+            return redirect('member:profile')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'member/change_password.html', {'form': form})
 
 @login_required
 def mypage(request):

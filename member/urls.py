@@ -16,8 +16,9 @@ urlpatterns = [
     # path('login/kakao/callback/', views.kakao_callback, name='kakao_callback'),
     
     # Profile
-    path('', views.profile_view, name='profile_view'),
-    path('edit/', views.profile_edit_view, name='profile_edit'),
+    path('profile/', views.profile_view, name='profile_view'),
+    path('profile/edit/', views.profile_edit_view, name='profile_edit'),
+    path('password/change/', views.change_password_view, name='change_password'),  # 비밀번호 변경 (추가 예정)
     
     # Messages
     # path('messages/', views.message_list_view, name='message_list'),
