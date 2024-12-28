@@ -1,40 +1,24 @@
-"""
-URL configuration for config project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from django.conf.urls.static import static # Django 프로젝트에서 정적 파일을 제공하기 위한 URL 패턴을 생성
-from . import settings
+from django.conf.urls.static import static
 from . import views
 from .views import CustomLoginView
-from .views import academy_dashboard
-from .views import student_dashboard
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("",views.HomeView.as_view(), name='index'),
+    path("", views.HomeView.as_view(), name='index'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register/', views.UserCreateView.as_view(), name='register'),
     path('accounts/register/done/', views.UserCreateDoneTV.as_view(), name='register_done'),
-    path('acad/', include('acad.urls')),               # acad 앱 연결
-    path('', include('academy.urls')), 
     path('login/', CustomLoginView.as_view(), name='login'),
-    path('acad/', academy_dashboard, name='academy_dashboard'),
-    path('student/', student_dashboard, name='student_dashboard'),
+    #path('profile/', views.profile_view, name='profile_view'),
+    #path('profile/edit/', views.profile_edit_view, name='profile_edit'),
+    #path('profile/', include('member.urls')),
+    path('acad/', include('acad.urls')),  # 'acad.urls'에서 URL을 처리하도록 변경
+    path('', include('academy.urls')),
+    path('course/', include('course.urls')),
+    path('member/', include('member.urls')),
 ]
 
 # 개발 환경에서 정적 파일 제공
