@@ -35,12 +35,12 @@
                     {% if user.is_authenticated %}
                         {% if user.is_academy %}
                             <li class="nav-item">
-                                <a class="nav-link text-danger fw-bold" href="http://127.0.0.1:8000/acad">학원관리자</a>
+                                <a class="nav-link text-danger fw-bold" href="{% url 'acad:dashboard' %}">학원관리자</a>
                             </li>
                         {% else %}
                             <!-- 학생일 경우 다른 메뉴를 추가할 수 있습니다. -->
                             <li class="nav-item">
-                                <a class="nav-link" href="http://127.0.0.1:8000/student">학생 대시보드</a>
+                                <a class="nav-link" href="{% url 'course:my_courses' %}">내 강의실</a>
                             </li>
                         {% endif %}
                     {% endif %}
@@ -52,7 +52,7 @@
                                 <i class="fas fa-user me-1"></i>{{ user.username }}
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="{% url 'profile_edit' %}" style="font-weight: 500;">마이페이지</a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile_edit' %}" style="font-weight: 500;">프로필</a></li>
                                 <li><a class="dropdown-item" href="#" style="font-weight: 500;">메시지 박스</a></li>
                                 <li>
                                     <form method="post" action="{% url 'logout' %}" class="m-0">

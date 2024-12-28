@@ -41,20 +41,13 @@ class CustomLoginView(LoginView):
         
         # 사용자 유형에 따라 리디렉션
         if user.is_academy:
-            return redirect('academy_dashboard')  # 학원 대시보드 URL
+            return redirect('acad:academy_dashboard')  # 학원 대시보드 URL
         else:
             return redirect('index')  # 학생 대시보드 URL
 
     def form_invalid(self, form):
         messages.error(self.request, '아이디 또는 비밀번호가 잘못되었습니다.')
         return super().form_invalid(form)
-
+    
 def academy_dashboard(request):
-    # 예시 데이터 처리: 학원 대시보드용
-    # 실제로는 학원 관련 정보가 필요할 수 있습니다.
     return render(request, 'academy_dashboard.html')
-
-def student_dashboard(request):
-    # 예시 데이터 처리: 학생 대시보드용
-    # 학생 관련 정보가 필요할 수 있습니다.
-    return render(request, 'student_dashboard.html')

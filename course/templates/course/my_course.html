@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>내 강의 목록</h2>
+    <ul class="list-group">
+        {% for enrollment in enrollments %}
+        <li class="list-group-item">
+            <h5>{{ enrollment.course.course_name }}</h5>
+            <p>{{ enrollment.course.course_description }}</p>
+            <p>상태: {{ enrollment.get_course_status_display }}</p>
+            <a href="{% url 'course:course_detail' enrollment.course.course_id %}" class="btn btn-primary btn-sm">상세보기</a>
+            {% if enrollment.course_status == 'approved' %}
+            <a href="{% url 'course:refund' %}" class="btn btn-danger btn-sm">환불 신청</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

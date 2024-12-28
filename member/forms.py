@@ -12,7 +12,7 @@ class SignupForm(UserCreationForm):
 
     class Meta:
         model = Member
-        fields = ['username', 'email', 'password1', 'password2', 'business_registration']
+        fields = ['username', 'email', 'password1', 'password2']
 
 # ProfileForm에서 수정할 필드들 정의
 class ProfileForm(forms.ModelForm):
