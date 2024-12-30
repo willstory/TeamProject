@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ course.course_name }}</h2>
+    <p>{{ course.course_description }}</p>
+    <p>가격: {{ course.course_price }}</p>
+    <a href="{% url 'course:course_enroll' course.course_id %}" class="btn btn-primary">수강 신청</a>
+</div>
+{% endblock %}

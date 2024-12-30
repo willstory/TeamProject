@@ -1,19 +1,25 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
-from member.forms import MemberCreationForm  # 커스텀 사용자 모델을 위한 폼
+from member.forms import SignupForm  # 수정된 SignupForm 사용
 from django.views.generic import TemplateView
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from django.shortcuts import redirect, render
-
+from member.views import profile_edit_view
 
 class HomeView(generic.TemplateView):
     template_name = 'home.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # 'member:profile_view'를 사용하여 URL을 찾습니다.
+        context['profile_url'] = reverse('member:profile_view')
+        return context
+
 class UserCreateView(generic.CreateView):
     template_name = 'registration/register.html'
-    form_class = MemberCreationForm
+    form_class = SignupForm  # SignupForm 사용
     success_url = reverse_lazy('register_done')
 
     def form_valid(self, form):
@@ -22,7 +28,7 @@ class UserCreateView(generic.CreateView):
 
         if user_type == 'academy':
             user.is_academy = True
-            user.is_active = True  # 학원은 기본적으로 비활성화 상태로 설정
+            user.is_active = True  # 학원은 기본적으로 활성화
         else:
             user.is_academy = False
             user.is_active = True  # 학생은 활성화 상태로 설정
@@ -41,16 +47,13 @@ class CustomLoginView(LoginView):
         
         # 사용자 유형에 따라 리디렉션
         if user.is_academy:
-            return redirect('academy_dashboard')  # 학원 대시보드 URL
+            return redirect('acad:academy_dashboard')  # 학원 대시보드 URL
         else:
             return redirect('index')  # 학생 대시보드 URL
 
     def form_invalid(self, form):
         messages.error(self.request, '아이디 또는 비밀번호가 잘못되었습니다.')
         return super().form_invalid(form)
-
+    
 def academy_dashboard(request):
     return render(request, 'academy_dashboard.html')
-
-def student_dashboard(request):
-    return render(request, 'student_dashboard.html')
