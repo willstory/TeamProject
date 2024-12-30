@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- 사이드바 -->
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="#" id="my_courses_button" class="list-group-item list-group-item-action">내 강의 목록</a>
+                <a href="#" id="course_enrollment_button" class="list-group-item list-group-item-action">수강신청</a>
+                <a href="#" id="refund_payment_button" class="list-group-item list-group-item-action">결제/취소/환불</a>
+            </div>
+        </div>
+        
+        <!-- 오른쪽 내용 -->
+        <div class="col-md-9">
+            <div id="my_courses_content">
+                <h2>내 강의 목록</h2>
+                <ul class="list-group">
+                    {% for enrollment in enrollments %}
+                    <li class="list-group-item">
+                        <h5>{{ enrollment.course.course_name }}</h5>
+                        <p>{{ enrollment.course.course_description }}</p>
+                        <p>상태: {{ enrollment.get_course_status_display }}</p>
+                        <a href="{% url 'course:course_detail' enrollment.course.course_id %}" class="btn btn-primary btn-sm">상세보기</a>
+                        {% if enrollment.course_status == 'approved' %}
+                        <a href="{% url 'course:refund' %}" class="btn btn-danger btn-sm">환불 신청</a>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div id="course_enrollment_content" style="display: none;">
+                <h2>수강 신청</h2>
+                <!-- 수강 신청 내용을 추가 -->
+            </div>
+            
+            <div id="refund_payment_content" style="display: none;">
+                <h2>결제/취소/환불</h2>
+                <!-- 환불 및 결제 내용 추가 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 버튼 클릭 시 콘텐츠 토글
+    document.getElementById("my_courses_button").addEventListener("click", function() {
+        document.getElementById("my_courses_content").style.display = "block";
+        document.getElementById("course_enrollment_content").style.display = "none";
+        document.getElementById("refund_payment_content").style.display = "none";
+    });
+
+    document.getElementById("course_enrollment_button").addEventListener("click", function() {
+        document.getElementById("my_courses_content").style.display = "none";
+        document.getElementById("course_enrollment_content").style.display = "block";
+        document.getElementById("refund_payment_content").style.display = "none";
+    });
+
+    document.getElementById("refund_payment_button").addEventListener("click", function() {
+        document.getElementById("my_courses_content").style.display = "none";
+        document.getElementById("course_enrollment_content").style.display = "none";
+        document.getElementById("refund_payment_content").style.display = "block";
+    });
+</script>
+{% endblock %}
