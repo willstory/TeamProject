@@ -1,34 +1,66 @@
 from django.shortcuts import render
+from django.db.models import Count
+from .models import QuestionData
 
 # Create your views here.
 def academy_list(request):
+    # GET 요청에서 선택된 값 가져오기
+    selected_years = request.GET.getlist("year")  # 연도 선택
+    selected_grades = request.GET.getlist("grade")  # 학년 선택
+
+    # 모든 문제 가져오기
+    questions = QuestionData.objects.all()[:10]
+
+    # 필터링 (연도 & 학년 체크박스 값이 있으면 필터 적용)
+    if selected_years:
+        questions = questions.filter(연도__in=selected_years)
+    
+    if selected_grades:
+        questions = questions.filter(학년__in=selected_grades)
+
     context = {
-        "categories": [
-            {"name": "모의고사", "checked": False},
-            {"name": "EBS", "checked": True},
-        ],
+        "questions": questions,
+        # "categories": [
+        #     {"name": "모의고사", "checked": True},
+        #     {"name": "EBS", "checked": False},
+        # ],
         "grades": [
-            {"name": "1학년", "checked": False},
+            {"name": "1학년", "checked": True},
             {"name": "2학년", "checked": False},
             {"name": "3학년", "checked": False},
         ],
         "years": [
-            {"name": "2019", "checked": False},
-            {"name": "2020", "checked": True},
-            {"name": "2021", "checked": True},
-            {"name": "2022", "checked": True},
-            {"name": "2023", "checked": True},
-            {"name": "2024", "checked": True},
+            {"name": "2019", "checked": True},
+            {"name": "2020", "checked": False},
+            {"name": "2021", "checked": False},
+            {"name": "2022", "checked": False},
+            {"name": "2023", "checked": False},
+            {"name": "2024", "checked": False},
         ],
+        "selected_years": selected_years,  # 선택된 연도 유지
+        "selected_grades": selected_grades,  # 선택된 학년 유지
     }
+
     return render(request, "academy_list.html", context)
 
 def academy_list_result(request):
     # 선택된 값 (예제에서는 기본값 설정)
-    selected_year = "2019"
-    selected_month = "3"
-    selected_category = "모의고사"
-    selected_grade = "고1"
+
+    selected_year = request.GET.get('year', '2019')  # 기본값 '2019'
+    selected_month = request.GET.get('month', '3')
+    selected_category = request.GET.get('category', '모의고사')
+    selected_grade = request.GET.get('grade', '고1')  # 기본값 '고1'
+
+
+    # 연도별 카운트를 계산
+    years = QuestionData.objects.values('연도').annotate(count=Count('색인')).order_by('연도')
+
+    # 학년별 카운트를 계산
+    grades = QuestionData.objects.values('학년').annotate(count=Count('색인')).order_by('학년')
+
+    # 카테고리별 카운트 (필요에 따라 추가적인 필터링을 할 수 있습니다)
+    categories = QuestionData.objects.values('유형').annotate(count=Count('색인')).order_by('유형')
+
 
     # 구분 데이터  
     # =================================================
