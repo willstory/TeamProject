@@ -9,7 +9,7 @@ def academy_list(request):
     selected_grades = request.GET.getlist("grade")  # 학년 선택
 
     # 모든 문제 가져오기
-    questions = QuestionData.objects.all()
+    questions = QuestionData.objects.all()[:10]
 
     # 필터링 (연도 & 학년 체크박스 값이 있으면 필터 적용)
     if selected_years:
@@ -45,10 +45,22 @@ def academy_list(request):
 
 def academy_list_result(request):
     # 선택된 값 (예제에서는 기본값 설정)
-    selected_year = "2019"
-    selected_month = "3"
-    selected_category = "모의고사"
-    selected_grade = "고1"
+
+    selected_year = request.GET.get('year', '2019')  # 기본값 '2019'
+    selected_month = request.GET.get('month', '3')
+    selected_category = request.GET.get('category', '모의고사')
+    selected_grade = request.GET.get('grade', '고1')  # 기본값 '고1'
+
+
+    # 연도별 카운트를 계산
+    years = QuestionData.objects.values('연도').annotate(count=Count('색인')).order_by('연도')
+
+    # 학년별 카운트를 계산
+    grades = QuestionData.objects.values('학년').annotate(count=Count('색인')).order_by('학년')
+
+    # 카테고리별 카운트 (필요에 따라 추가적인 필터링을 할 수 있습니다)
+    categories = QuestionData.objects.values('유형').annotate(count=Count('색인')).order_by('유형')
+
 
     # 구분 데이터  
     # =================================================
