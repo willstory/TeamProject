@@ -79,66 +79,90 @@
     </div>
 </nav>
 
-{% block content %}
-<div class="container">
-    <form id="filterForm" method="GET" action="{% url 'academy:academy_list' %}">
-        <div class="section" style="text-align: center; margin-top: 50px;">
-            <label><b>구분 : </b></label>
-            {% for category in categories %}
-                <input type="checkbox" name="category" value="{{ category.name }}" id="category_{{ forloop.counter }}" class="screen-reader"
-                       {% if category.checked %}checked{% endif %}>
-                <label class="label-box" for="category_{{ forloop.counter }}">
-                    <span class="check-icon" aria-hidden="true"></span>
-                    {{ category.name }}
-                </label>
-            {% endfor %}
-        </div>
-    </form>
-
-    <div class="table-container">
-        {% if questions %}
-            <table class="exam-table">
-                <thead>
-                    <tr>
-                        <th>색인</th>
-                        <th>구분</th>
-                        <th>학년</th>
-                        <th>년도</th>
-                        <th>번호</th>
-                        <th>문제</th>
-                        <th>정답</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for question in questions %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ question.유형 }}</td>
-                        <td>{{ question.학년 }}</td>
-                        <td>{{ question.연도 }}년</td>
-                        <td>{{ question.번호 }}</td>
-                        <td>{{ question.문제|truncatewords:10 }}</td>
-                        <td>{{ question.정답 }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p class="no-data-message text-center">조건에 맞는 문제가 없습니다.</p>
-        {% endif %}
+  {% block content %}
+<body>
+  <div class="container">
+    <!-- 구분 -->
+    <div class="section" style="text-align: center; margin-top: 50px;">
+      <label><b>구분 : </b></label>
+      {% for category in categories %}
+          <input type="checkbox" id="category_{{ forloop.counter }}" class="screen-reader" {% if category.checked %}checked{% endif %}>
+          <label class="label-box" for="category_{{ forloop.counter }}">
+              <span class="check-icon" aria-hidden="true"></span>
+              {{ category.name }}
+          </label>
+      {% endfor %}
     </div>
-</div>
-{% endblock %}
+  
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-      document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
-          checkbox.addEventListener("change", function() {
-              document.getElementById("filterForm").submit();
-          });
-      });
-  });
-</script>
+    <!-- 학년 -->
+    <div class="section" style="text-align: center;">
+        <label><b>학년 : </b></label>
+        {% for grade in grades %}
+            <input type="checkbox" id="grade_{{ forloop.counter }}" class="screen-reader" {% if grade.checked %}checked{% endif %}>
+            <label class="label-box" for="grade_{{ forloop.counter }}">
+                <span class="check-icon" aria-hidden="true"></span>
+                {{ grade.name }}
+            </label>
+        {% endfor %}
+    </div>
+
+    <!-- 년도 -->
+    <div class="section"  style="margin-bottom: 300px; text-align: center;">
+        <label><b>년도 : </b></label>
+        {% for year in years %}
+            <input type="checkbox" id="year_{{ forloop.counter }}" class="screen-reader" {% if year.checked %}checked{% endif %}>
+            <label class="label-box" for="year_{{ forloop.counter }}">
+                <span class="check-icon" aria-hidden="true"></span>
+                {{ year.name }}
+            </label>
+        {% endfor %}
+    </div>
+  
+    <div class="table-container">
+      {% if exams %}
+          <table class="exam-table">
+              <thead>
+                  <tr>
+                      <th>색인</th>
+                      <th>구분</th>
+                      <th>학년</th>
+                      <th>년도</th>
+                      <th>월</th>
+                      <th>제목</th>
+                      <th>보기</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for exam in exams %}
+                  <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ exam.category }}</td>
+                      <td>{{ exam.grade }}</td>
+                      <td>{{ exam.year }}년</td>
+                      <td>{{ exam.month }}월</td>
+                      <td>{{ exam.title }}</td>
+                      <td>
+                          {% if exam.link %}
+                            <a href="{% url 'exam_list_result' %}">클릭</a>
+                          {% else %}
+                              -
+                          {% endif %}
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      {% else %}
+        <div class="section"  style="margin-bottom: 330px;">
+          <p class="no-data-message" style="text-align: center;">조건에 맞는 테이블이 없습니다.</p>
+        </div>   
+      {% endif %}
+      
+       
+  </div>
+  
+    {% endblock %}
 
     {% block footer %}
     <footer>

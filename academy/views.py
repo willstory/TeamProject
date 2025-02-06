@@ -1,26 +1,46 @@
 from django.shortcuts import render
+from django.db.models import Count
+from .models import QuestionData
 
 # Create your views here.
 def academy_list(request):
+    # GET 요청에서 선택된 값 가져오기
+    selected_years = request.GET.getlist("year")  # 연도 선택
+    selected_grades = request.GET.getlist("grade")  # 학년 선택
+
+    # 모든 문제 가져오기
+    questions = QuestionData.objects.all()
+
+    # 필터링 (연도 & 학년 체크박스 값이 있으면 필터 적용)
+    if selected_years:
+        questions = questions.filter(연도__in=selected_years)
+    
+    if selected_grades:
+        questions = questions.filter(학년__in=selected_grades)
+
     context = {
-        "categories": [
-            {"name": "모의고사", "checked": False},
-            {"name": "EBS", "checked": True},
-        ],
+        "questions": questions,
+        # "categories": [
+        #     {"name": "모의고사", "checked": True},
+        #     {"name": "EBS", "checked": False},
+        # ],
         "grades": [
-            {"name": "1학년", "checked": False},
+            {"name": "1학년", "checked": True},
             {"name": "2학년", "checked": False},
             {"name": "3학년", "checked": False},
         ],
         "years": [
-            {"name": "2019", "checked": False},
-            {"name": "2020", "checked": True},
-            {"name": "2021", "checked": True},
-            {"name": "2022", "checked": True},
-            {"name": "2023", "checked": True},
-            {"name": "2024", "checked": True},
+            {"name": "2019", "checked": True},
+            {"name": "2020", "checked": False},
+            {"name": "2021", "checked": False},
+            {"name": "2022", "checked": False},
+            {"name": "2023", "checked": False},
+            {"name": "2024", "checked": False},
         ],
+        "selected_years": selected_years,  # 선택된 연도 유지
+        "selected_grades": selected_grades,  # 선택된 학년 유지
     }
+
     return render(request, "academy_list.html", context)
 
 def academy_list_result(request):
