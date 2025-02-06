@@ -141,6 +141,307 @@ html, body {
     padding: 0.375rem 0.75rem; /* 기본 패딩을 유지하기 위해 조정 */
 }
 
+
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: black;
+}
+
+.academy-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.examlistbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 3rem;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 3rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+.feature-item {
+    text-align: center;
+}
+
+.feature-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.feature-item p {
+    color: #444;
+    font-size: 1.1rem;
+}
+
+.table-container {
+    padding: 2rem;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.exam-table {
+    width: 100%;
+    border-collapse: separate;
+    background-color: white;
+}
+
+.exam-table th,
+.exam-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.exam-table thead {
+    background-color: #f0f0f0;
+}
+
+.exam-table tbody tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+.exam-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.review-section {
+    padding: 40px 0;
+    background-color: #f8f9fa;
+}
+
+.review-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.review-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.review-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex: 1;
+}
+
+.review-textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+    margin-bottom: 15px;
+}
+
+.submit-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+
+.review-list {
+    margin-top: 30px;
+}
+
+.review-item {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.review-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.reviewer {
+    font-weight: bold;
+}
+
+.review-date {
+    color: #666;
+}
+
+.review-text {
+    color: #333;
+    line-height: 1.5;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.radio-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+
+/* 각 라벨 섹션 스타일 */
+.section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 체크박스 숨기기 (스크린 리더 접근 가능) */
+.screen-reader {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* 체크박스 스타일 커스텀 */
+.label-box {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.check-icon {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #333;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+/* 체크되었을 때 스타일 */
+.screen-reader:checked + .label-box .check-icon {
+    background-color: #333;
+}
+
+.academy-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.examlistbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.no-data-message {
+    text-align: center;  /* 수평 가운데 정렬 */
+    font-weight: bold;   /* 글자를 굵게 */
+    font-size: 18px;     /* 글자 크기 조정 */
+    margin-top: 200px;   /* 위쪽 간격 추가 (필요하면 조절) */
+}
+
+
+
+
+
+
+
+
+
+
+
+
 /* Footer Styles */
 footer {
     background-color: white;

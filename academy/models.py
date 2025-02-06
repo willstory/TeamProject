@@ -6,6 +6,36 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 User = get_user_model()
 
+from django.db import models
+
+# models.py
+from django.db import models
+
+class QuestionData(models.Model):
+    색인 = models.CharField(max_length=255, db_column='색인', primary_key=True)
+    문제 = models.TextField(db_column='문제')
+    유형 = models.CharField(max_length=100, db_column='유형')
+    지문 = models.TextField(db_column='지문')
+    보기 = models.TextField(db_column='보기')
+    정답 = models.CharField(max_length=255, db_column='정답')
+    변형 = models.CharField(max_length=100, db_column='변형')
+    학년 = models.CharField(max_length=10, db_column='학년')
+    연도 = models.CharField(max_length=4, db_column='연도')
+    강 = models.CharField(max_length=50, db_column='강')
+    번호 = models.IntegerField(db_column='번호')
+    단원 = models.CharField(max_length=255, db_column='단원')
+    그림 = models.CharField(max_length=255, db_column='그림')
+
+    class Meta:
+        db_table = 'question_data'
+        managed = False  # Django가 이 테이블을 관리하지 않도록 설정
+
+    def __str__(self):
+        return f"{self.색인} - {self.문제[:20]}"
+
+
+
+
 class Academy(models.Model):
     admin = models.OneToOneField(Member, on_delete=models.CASCADE, related_name='academy', limit_choices_to={'member_type': 'academy_admin'}, null=True, blank=True, default=None)
     name = models.CharField(max_length=255)
