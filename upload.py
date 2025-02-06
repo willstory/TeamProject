@@ -25,7 +25,8 @@ db_port = "5432"
 db_name = "teamproject"
 
 # MySQL 연결 엔진 생성
-engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}")
+# engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}")
+engine = create_engine(f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}")
 
 # 데이터 저장할 테이블명
 table_name = "question_data"
