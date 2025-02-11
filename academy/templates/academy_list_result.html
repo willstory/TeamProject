@@ -108,18 +108,19 @@
                     {{ year.name }}
                 {% endfor %}
             </div>
-  
+    
+        <div class="section" style="margin-bottom: 200px; text-align: center;"><h1>
+            선택 문제 유형 년도: {{ selected_year }} 구분: {{ selected_category }} 학년: {{ selected_grade }} 
+    </h1></div>
+
     <div class="table-container" style="margin-bottom: 250px; text-align: center;">
       {% if exams %}
           <table class="exam-table">
               <thead>
                   <tr>
                       <th>색인</th>
-                      <th>구분</th>
-                      <th>학년</th>
-                      <th>년도</th>
-                      <th>월</th>
-                      <th>제목</th>
+                      <th>지문(문제)</th>
+                      <th>문제수</th>
                       <th>보기</th>
                   </tr>
               </thead>
@@ -127,14 +128,12 @@
                   {% for exam in exams %}
                   <tr>
                       <td>{{ forloop.counter }}</td>
-                      <td>{{ exam.category }}</td>
-                      <td>{{ exam.grade }}</td>
-                      <td>{{ exam.year }}년</td>
-                      <td>{{ exam.month }}월</td>
-                      <td>{{ exam.title }}</td>
+                      <td>{{ exam.question_list }}</td>
+                      <td>{{ exam.question_counter }}</td>
                       <td>
                           {% if exam.link %}
-                            <a href="{% url 'exam_list_result' %}">클릭</a>
+                          <!--PDF 다운로드 부분 화면으로 이동해야 하는 링크--> 
+                            <a href="{% url 'exam_list_result' %}">PDF</a>
                           {% else %}
                               -
                           {% endif %}
@@ -146,7 +145,7 @@
 
     {% else %}
     <div class="section" style="margin-bottom: 200px; text-align: center;"><h1>
-            문제 리스트에서 선택한 것 나오는 곳 [{{ selected_year }}]년도 [{{ selected_category }}] [{{ selected_grade }}] 학년 
+            선택 문제 유형 년도: {{ selected_year }} 구분: {{ selected_category }} 학년: {{ selected_grade }} 
     </h1></div>
     <div class="section"  style="margin-bottom: 200px;">
         <p class="no-data-message" style="text-align: center;">조건에 맞는 테이블이 없습니다.</p>
