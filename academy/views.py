@@ -58,22 +58,70 @@ def academy_list(request):
 
 def academy_list_result(request):
     # 선택된 값 가져오기
-    selected_year = request.GET.get('year', '2019')
-    selected_category = request.GET.get('category', '모의고사')
-    selected_grade = request.GET.get('grade', '고1')
+    selected_year = request.GET.get('year')
+    selected_grade = request.GET.get('grade')
+    selected_month = request.GET.get('month')
+    selected_category = request.GET.get('category')
 
-    # 데이터 카운트 계산
-    years = QuestionData.objects.values('연도').annotate(count=Count('색인')).order_by('연도')
-    grades = QuestionData.objects.values('학년').annotate(count=Count('색인')).order_by('학년')
-    categories = QuestionData.objects.values('유형').annotate(count=Count('색인')).order_by('유형')
+    # 필터링된 문제 가져오기
+    if selected_year and selected_grade and selected_month:
+        questions = QuestionData.objects.filter(연도=selected_year, 학년=selected_grade, 강=selected_month)
+    else:
+        questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
+
+    # 번호별 문제 수 계산
+    number_counts = questions.values('번호').annotate(count=Count('번호')).order_by('번호')
+
+    # 📌 (번호(개수)) 문자열 리스트 생성
+    question_list = ', '.join(f"{num['번호']}({num['count']})" for num in number_counts)
+    total_count = sum(num['count'] for num in number_counts)  # 총 문제 수 계산
+
+    # 📌 학년별 문제 수 계산 및 리스트 변환
+    grade_counts = QuestionData.objects.values('학년').annotate(count=Count('학년'))
+    grades = [
+        {
+            "name": grade['학년'], 
+            "count": grade['count'],
+            "checked": selected_grade == grade['학년']
+        }
+        for grade in grade_counts
+    ]
+
+    # 📌 유형별 문제 수 계산 및 리스트 변환
+    category_counts = QuestionData.objects.values('유형').annotate(count=Count('유형'))
+    categories = [
+        {
+            "name": category['유형'], 
+            "count": category['count'],
+            "checked": selected_category == category['유형']
+        }
+        for category in category_counts
+    ]
+
+    # 📌 연도별 문제 수 계산 및 리스트 변환
+    year_counts = QuestionData.objects.values('연도').annotate(count=Count('연도'))
+    years = [
+        {
+            "name": year['연도'], 
+            "count": year['count'],
+            "checked": str(selected_year) == str(year['연도'])
+        }
+        for year in year_counts
+    ]
+
+    exams = [{
+        'question_list': question_list,
+        'question_counter': total_count,  # 총 문제 수
+        'link': None  # 필요에 따라 링크 설정
+    }]
 
     context = {
-        "categories": [{"name": category['유형'], "count": category['count']} for category in categories],
-        "grades": [{"name": grade['학년'], "count": grade['count']} for grade in grades],
-        "years": [{"name": year['연도'], "count": year['count']} for year in years],
+        "exams": exams,
         "selected_year": selected_year,
-        "selected_category": selected_category,
         "selected_grade": selected_grade,
+        "grades": grades,
+        "years": years,
+        "categories": categories,
     }
 
     return render(request, "academy_list_result.html", context)
