@@ -87,7 +87,7 @@
                 <label><b>구분 : </b></label>
                 {% for category in categories %}
                     <input type="radio" name="category" value="{{ category.name }}" {% if category.checked %}checked{% endif %}>
-                    {{ category.name }}
+                    {{ category.name }} ({{ category.count }})
                 {% endfor %}
             </div>
 
@@ -96,7 +96,7 @@
                 <label><b>학년 : </b></label>
                 {% for grade in grades %}
                     <input type="radio" name="grade" value="{{ grade.name }}" {% if grade.checked %}checked{% endif %}>
-                    {{ grade.name }}
+                    {{ grade.name }} ({{ grade.count }})
                 {% endfor %}
             </div>
 
@@ -105,7 +105,7 @@
                 <label><b>년도 : </b></label>
                 {% for year in years %}
                     <input type="radio" name="year" value="{{ year.name }}" {% if year.checked %}checked{% endif %}>
-                    {{ year.name }}
+                    {{ year.name }} ({{ year.count }})
                 {% endfor %}
             </div>
     
