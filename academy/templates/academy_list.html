@@ -90,7 +90,6 @@
           <label class="label-box" for="category_{{ forloop.counter }}">
               <span class="check-icon" aria-hidden="true"></span>
               {{ category.name }}
-          </label>
       {% endfor %}
     </div>
   
@@ -108,7 +107,7 @@
     </div>
 
     <!-- 년도 -->
-    <div class="section"  style="margin-bottom: 300px; text-align: center;">
+    <div class="section"  style="margin-bottom: 100px; text-align: center;">
         <label><b>년도 : </b></label>
         {% for year in years %}
             <input type="checkbox" id="year_{{ forloop.counter }}" class="screen-reader" {% if year.checked %}checked{% endif %}>
@@ -118,49 +117,55 @@
             </label>
         {% endfor %}
     </div>
-  
+    
     <div class="table-container">
-      {% if exams %}
-          <table class="exam-table">
-              <thead>
-                  <tr>
-                      <th>색인</th>
-                      <th>구분</th>
-                      <th>학년</th>
-                      <th>년도</th>
-                      <th>월</th>
-                      <th>제목</th>
-                      <th>보기</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for exam in exams %}
-                  <tr>
-                      <td>{{ forloop.counter }}</td>
-                      <td>{{ exam.category }}</td>
-                      <td>{{ exam.grade }}</td>
-                      <td>{{ exam.year }}년</td>
-                      <td>{{ exam.month }}월</td>
-                      <td>{{ exam.title }}</td>
-                      <td>
-                          {% if exam.link %}
-                            <a href="{% url 'academy:academy_list_result' %}?year={{ exam.year }}&grade={{ exam.grade }}&month={{ exam.month }}">클릭</a>
-                          {% else %}
-                              -
-                          {% endif %}
-                      </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>
-      {% else %}
-        <div class="section"  style="margin-bottom: 330px;">
-          <p class="no-data-message" style="text-align: center;">조건에 맞는 테이블이 없습니다.</p>
-        </div>   
-      {% endif %}
-      
-       
-  </div>
+        {% if exams %}
+            {% with exams|dictsort:"year" as sorted_exams %}
+                {% regroup sorted_exams by year as exams_by_year %}
+                {% for year_group in exams_by_year %}
+                    <h2>{{ year_group.grouper }}</h2>  <!-- 같은 년도는 한 번만 출력됨 -->
+                    <table class="exam-table">
+                        <thead>
+                            <tr>
+                                <th>색인</th>
+                                <th>구분</th>
+                                <th>학년</th>
+                                <th>년도</th>
+                                <th>월</th>
+                                <th>제목</th>
+                                <th>보기</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exam in year_group.list %}
+                                <tr>
+                                    <td>{{ forloop.parentloop.counter }}</td>
+                                    <td>{{ exam.category }}</td>
+                                    <td>{{ exam.grade }}</td>
+                                    <td>{{ exam.year }}년</td>
+                                    <td>{{ exam.month }}월</td>
+                                    <td>{{ exam.title }}</td>
+                                    <td>
+                                        {% if exam.link %}
+                                            <a href="{% url 'academy:academy_list_result' %}?year={{ exam.year }}&grade={{ exam.grade }}&month={{ exam.month }}">클릭</a>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endfor %}
+            {% endwith %}
+        {% else %}
+            <div class="section" style="margin-bottom: 380px;">
+                <p class="no-data-message" style="text-align: center;">조건에 맞는 테이블이 없습니다.</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    
   
     {% endblock %}
 
