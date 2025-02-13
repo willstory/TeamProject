@@ -2,12 +2,17 @@ from django.shortcuts import render
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from .models import QuestionData
+from .models import Exam
+
 
 def academy_list(request):
-    # GET 요청에서 선택된 값 가져오기
-    selected_years = request.GET.getlist("year", [])
-    selected_grades = request.GET.getlist("grade", [])
-    selected_categories = request.GET.getlist("category", [])
+    # 모든 시험 목록 가져오기
+    exams = Exam.objects.all()
+
+    # GET 요청에서 필터링 값 가져오기
+    selected_categories = request.GET.get("categories", "").split(",") if request.GET.get("categories") else []
+    selected_grades = request.GET.get("grades", "").split(",") if request.GET.get("grades") else []
+    selected_years = request.GET.get("years", "").split(",") if request.GET.get("years") else []
 
     # 모든 문제 가져오기 및 필터링
     questions = QuestionData.objects.all()
@@ -46,6 +51,7 @@ def academy_list(request):
     exams = formatted_exams
 
     context = {
+    
         "exams": exams,
         "grades": [{"name": grade, "checked": grade in selected_grades} for grade in grades],
         "years": [{"name": year, "checked": str(year) in selected_years} for year in years],
