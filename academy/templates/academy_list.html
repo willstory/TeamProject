@@ -144,7 +144,7 @@
                       <td>{{ exam.title }}</td>
                       <td>
                           {% if exam.link %}
-                            <a href="{% url 'academy:exam_list_result' %}?year={{ exam.year }}&grade={{ exam.grade }}&month={{ exam.month }}">클릭</a>
+                            <a href="{% url 'academy:academy_list_result' %}?year={{ exam.year }}&grade={{ exam.grade }}&month={{ exam.month }}">클릭</a>
                           {% else %}
                               -
                           {% endif %}
