@@ -133,7 +133,7 @@
                       <td>
                           {% if exam.link %}
                           <!--PDF 다운로드 부분 화면으로 이동해야 하는 링크--> 
-                              <a href="{% url 'academy:exam_list_result' %}?year={{ exam.year }}&grade={{ exam.grade }}&month={{ exam.month }}" class="btn btn-primary">출력</a>
+                            <a href="{% url 'exam_list_result' %}">PDF</a>
                           {% else %}
                               -
                           {% endif %}
