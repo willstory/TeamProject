@@ -81,50 +81,82 @@
 
   {% block content %}
 <body>
-  <div class="container">
-    <!-- 구분 -->
-    <div class="section" style="text-align: center; margin-top: 50px;">
-      <label><b>구분 : </b></label>
-      {% for category in categories %}
-          <input type="checkbox" id="category_{{ forloop.counter }}" class="screen-reader" {% if category.checked %}checked{% endif %}>
-          <label class="label-box" for="category_{{ forloop.counter }}">
-              <span class="check-icon" aria-hidden="true"></span>
-              {{ category.name }}
-      {% endfor %}
-    </div>
-  
-
-    <!-- 학년 -->
-    <div class="section" style="text-align: center;">
-        <label><b>학년 : </b></label>
-        {% for grade in grades %}
-            <input type="checkbox" id="grade_{{ forloop.counter }}" class="screen-reader" {% if grade.checked %}checked{% endif %}>
-            <label class="label-box" for="grade_{{ forloop.counter }}">
-                <span class="check-icon" aria-hidden="true"></span>
-                {{ grade.name }}
-            </label>
-        {% endfor %}
-    </div>
-
-    <!-- 년도 -->
-    <div class="section"  style="margin-bottom: 100px; text-align: center;">
-        <label><b>년도 : </b></label>
-        {% for year in years %}
-            <input type="checkbox" id="year_{{ forloop.counter }}" class="screen-reader" {% if year.checked %}checked{% endif %}>
-            <label class="label-box" for="year_{{ forloop.counter }}">
-                <span class="check-icon" aria-hidden="true"></span>
-                {{ year.name }}
-            </label>
-        {% endfor %}
+    <div class="container">
+        <!-- 구분 -->
+        <div class="section" style="text-align: center; margin-top: 50px;">
+            <label><b>구분 : </b></label>
+            {% for category in categories %}
+                <input type="checkbox" id="category_{{ forloop.counter }}" class="screen-reader filter-checkbox"
+                    data-filter="category" value="{{ category.name }}" {% if category.checked %}checked{% endif %}
+                    onchange="filterExams()">
+                <label class="label-box" for="category_{{ forloop.counter }}">
+                    <span class="check-icon" aria-hidden="true"></span> {{ category.name }}
+                </label>
+            {% endfor %}
+        </div>
+    
+        <!-- 학년 -->
+        <div class="section" style="text-align: center;">
+            <label><b>학년 : </b></label>
+            {% for grade in grades %}
+                <input type="checkbox" id="grade_{{ forloop.counter }}" class="screen-reader filter-checkbox"
+                    data-filter="grade" value="{{ grade.name }}" {% if grade.checked %}checked{% endif %}
+                    onchange="filterExams()">
+                <label class="label-box" for="grade_{{ forloop.counter }}">
+                    <span class="check-icon" aria-hidden="true"></span> {{ grade.name }}
+                </label>
+            {% endfor %}
+        </div>
+    
+        <!-- 년도 -->
+        <div class="section" style="margin-bottom: 100px; text-align: center;">
+            <label><b>년도 : </b></label>
+            {% for year in years %}
+                <input type="checkbox" id="year_{{ forloop.counter }}" class="screen-reader filter-checkbox"
+                    data-filter="year" value="{{ year.name }}" {% if year.checked %}checked{% endif %}
+                    onchange="filterExams()">
+                <label class="label-box" for="year_{{ forloop.counter }}">
+                    <span class="check-icon" aria-hidden="true"></span> {{ year.name }}
+                </label>
+            {% endfor %}
+        </div>
     </div>
     
-    <div class="table-container">
+    <script>
+        function filterExams() {
+            let selectedCategories = [];
+            let selectedGrades = [];
+            let selectedYears = [];
+    
+            document.querySelectorAll('.filter-checkbox:checked').forEach((checkbox) => {
+                let filterType = checkbox.getAttribute('data-filter');
+                if (filterType === "category") {
+                    selectedCategories.push(checkbox.value);
+                } else if (filterType === "grade") {
+                    selectedGrades.push(checkbox.value);
+                } else if (filterType === "year") {
+                    selectedYears.push(checkbox.value);
+                }
+            });
+    
+            let queryParams = new URLSearchParams();
+            if (selectedCategories.length) queryParams.append("categories", selectedCategories.join(","));
+            if (selectedGrades.length) queryParams.append("grades", selectedGrades.join(","));
+            if (selectedYears.length) queryParams.append("years", selectedYears.join(","));
+    
+            window.location.href = "?" + queryParams.toString();
+        }
+    </script>
+    
+
+    
+    <div class="table-container" >
         {% if exams %}
             {% with exams|dictsort:"year" as sorted_exams %}
                 {% regroup sorted_exams by year as exams_by_year %}
                 {% for year_group in exams_by_year %}
                     <h2>{{ year_group.grouper }}</h2>  <!-- 같은 년도는 한 번만 출력됨 -->
-                    <table class="exam-table">
+                    <table class="exam-table" >
                         <thead>
                             <tr>
                                 <th>색인</th>
