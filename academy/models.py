@@ -26,6 +26,19 @@ class QuestionData(models.Model):
     단원 = models.CharField(max_length=255, db_column='Total_number')
     그림 = models.CharField(max_length=255, db_column='그림')
     기본키 = models.CharField(max_length=50, db_column='PK_number')
+    # 색인 = models.CharField(max_length=255, db_column='색인', primary_key=True)
+    # 문제 = models.TextField(db_column='문제')
+    # 유형 = models.CharField(max_length=100, db_column='유형')
+    # 지문 = models.TextField(db_column='지문')
+    # 보기 = models.TextField(db_column='보기')
+    # 정답 = models.CharField(max_length=255, db_column='정답')
+    # 변형 = models.CharField(max_length=100, db_column='변형')
+    # 학년 = models.CharField(max_length=10, db_column='학년')
+    # 연도 = models.CharField(max_length=4, db_column='연도')
+    # 강 = models.CharField(max_length=50, db_column='강')
+    # 번호 = models.IntegerField(db_column='번호')
+    # 단원 = models.CharField(max_length=255, db_column='단원')
+    # 그림 = models.CharField(max_length=255, db_column='그림')
 
     class Meta:
         db_table = 'question_data'
