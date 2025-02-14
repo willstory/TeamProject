@@ -1,6 +1,8 @@
 import pandas as pd
 from sqlalchemy import create_engine
 import os
+from dotenv import load_dotenv
+import os
 
 # 모든 행과 열을 출력할 수 있도록 설정
 pd.set_option("display.max_rows", None)  # 행 제한 해제
@@ -15,17 +17,15 @@ df = pd.read_excel(file_path, engine="openpyxl")
 # 데이터 전체 출력
 print(df.to_string())
 
-from sqlalchemy import create_engine
+load_dotenv()# 데이터베이스 연결 정보 (AWS RDS) 
+db_user = os.getenv("DB_USER")
+db_password = os.getenv("DB_PASSWORD")
+db_host = os.getenv("DB_HOST")
+db_port = os.getenv("DB_PORT")
+db_name = os.getenv("DB_NAME")
 
-# 데이터베이스 연결 정보
-db_user = "postgres"
-db_password = "1"
-db_host = "localhost"
-db_port = "5432"
-db_name = "teamproject"
-
-# MySQL 연결 엔진 생성
-engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}")
+# PostgreSQL 연결 엔진 생성 (MySQL 부분 제거)
+engine = create_engine(f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}")
 
 # 데이터 저장할 테이블명
 table_name = "question_data"
@@ -60,14 +60,12 @@ def upload_excel_to_postgres(filepath, table_name, db_connection_string):
 
 # 사용 예시
 if __name__ == "__main__":
-    # 데이터베이스 연결 문자열 (이미 있는 정보 사용)
-    db_connection_string = "postgresql://postgres:1@localhost:5432/teamproject"
+    # AWS RDS PostgreSQL 연결 문자열
+    db_connection_string = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
     
     # 파일 경로와 테이블 이름 설정
-    excel_filepath = "고1 변형문제 DB.xlsx"  # 실제 엑셀 파일 경로로 변경하세요
-
-    table_name = "question_data"  # 원하는 테이블 이름으로 변경하세요
+    excel_filepath = "고1 변형문제 DB.xlsx"
+    table_name = "question_data"
     
-
     # 업로드 실행
     upload_excel_to_postgres(excel_filepath, table_name, db_connection_string)
