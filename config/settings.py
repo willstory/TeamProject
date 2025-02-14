@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,17 +82,29 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+load_dotenv()
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'teamproject',  # 데이터베이스 이름
+#         'USER': 'postgres',  # PostgreSQL 사용자
+#         'PASSWORD': '1',   # 비밀번호
+#         'HOST': 'localhost',           # 데이터베이스 서버 주소 (로컬에서 실행 중일 경우 'localhost' 사용)
+#         'PORT': '5432',                # PostgreSQL 기본 포트
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'teamproject',  # 데이터베이스 이름
-        'USER': 'postgres',  # PostgreSQL 사용자
-        'PASSWORD': '1',   # 비밀번호
-        'HOST': 'localhost',           # 데이터베이스 서버 주소 (로컬에서 실행 중일 경우 'localhost' 사용)
-        'PORT': '5432',                # PostgreSQL 기본 포트
+        'NAME': os.getenv("DB_NAME"),  # 데이터베이스 이름
+        'USER': os.getenv("DB_USER"),  # PostgreSQL 사용자
+        'PASSWORD': os.getenv("DB_PASSWORD"),   # 비밀번호
+        'HOST': os.getenv("DB_HOST"),           # 데이터베이스 서버 주소 (로컬에서 실행 중일 경우 'localhost' 사용)
+        'PORT': os.getenv("DB_PORT"),                # PostgreSQL 기본 포트
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
