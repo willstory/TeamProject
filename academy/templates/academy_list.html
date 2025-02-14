@@ -82,19 +82,7 @@
   {% block content %}
 <body>
     <div class="container">
-        <!-- 구분 -->
-        <div class="section" style="text-align: center; margin-top: 50px;">
-            <label><b>구분 : </b></label>
-            {% for category in categories %}
-                <input type="checkbox" id="category_{{ forloop.counter }}" class="screen-reader filter-checkbox"
-                    data-filter="category" value="{{ category.name }}" {% if category.checked %}checked{% endif %}
-                    onchange="filterExams()">
-                <label class="label-box" for="category_{{ forloop.counter }}">
-                    <span class="check-icon" aria-hidden="true"></span> {{ category.name }}
-                </label>
-            {% endfor %}
-        </div>
-    
+
         <!-- 학년 -->
         <div class="section" style="text-align: center;">
             <label><b>학년 : </b></label>
