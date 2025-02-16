@@ -2,12 +2,10 @@ from django.shortcuts import render
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from .models import QuestionData
-from .models import Exam
+
 
 
 def academy_list(request):
-    # 모든 시험 목록 가져오기
-    exams = Exam.objects.all()
 
     # GET 요청에서 필터링 값 가져오기
     selected_categories = request.GET.get("categories", "").split(",") if request.GET.get("categories") else []
