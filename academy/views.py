@@ -138,11 +138,12 @@ def academy_list_result(request):
         'link': None  # 필요에 따라 링크 설정
     }]
 
+    category = '모의고사'
     context = {
         "exams": exams,
         "selected_year": selected_year,
         "selected_grade": selected_grade,
-        "selected_category": selected_category,
+        "selected_category": category,
         "grades": grades,
         "years": years,
         "categories": categories,
