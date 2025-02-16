@@ -82,20 +82,24 @@
   {% block content %}
 <body>
   <div class="container">
-            <!-- 구분 -->
-            <div class="section" style="text-align: center; margin-top: 50px;">
-                <label><b>구분 : </b></label>
-                {% for category in categories %}
-                    <input type="radio" name="category" value="{{ category.name }}" {% if category.checked %}checked{% endif %}>
-                    {{ category.name }} ({{ category.count }})
-                {% endfor %}
-            </div>
+        <!-- 구분 -->
+        <div class="section" style="margin-top: 50px;">
+            <label><b>구분 : </b></label>
+            {% for category in categories %}
+                <input type="checkbox" id="category_{{ forloop.counter }}" class="screen-reader" {% if category.checked %}checked{% endif %}>
+                <label class="label-box" for="category_{{ forloop.counter }}">
+                    <span class="check-icon" aria-hidden="true"></span>
+                {{ category.name }} ({{ category.count }})
+            {% endfor %}
+        </div>
 
             <!-- 학년 -->
             <div class="section">
                 <label><b>학년 : </b></label>
                 {% for grade in grades %}
-                    <input type="radio" name="grade" value="{{ grade.name }}" {% if grade.checked %}checked{% endif %}>
+                    <input type="checkbox" id="grade_{{ forloop.counter }}" class="screen-reader" {% if grade.checked %}checked{% endif %}>
+                    <label class="label-box" for="grade_{{ forloop.counter }}">
+                        <span class="check-icon" aria-hidden="true"></span>
                     {{ grade.name }} ({{ grade.count }})
                 {% endfor %}
             </div>
@@ -104,13 +108,15 @@
             <div class="section" style="margin-bottom: 100px;">
                 <label><b>년도 : </b></label>
                 {% for year in years %}
-                    <input type="radio" name="year" value="{{ year.name }}" {% if year.checked %}checked{% endif %}>
+                    <input type="checkbox" id="year_{{ forloop.counter }}" class="screen-reader" {% if year.checked %}checked{% endif %}>
+                    <label class="label-box" for="year_{{ forloop.counter }}">
+                        <span class="check-icon" aria-hidden="true"></span>
                     {{ year.name }} ({{ year.count }})
                 {% endfor %}
             </div>
     
         <div class="section" style="margin-bottom: 200px; text-align: center;"><h1>
-            선택 문제 유형 년도: {{ selected_year }} 구분: {{ selected_category }} 학년: {{ selected_grade }} 
+            선택한 문제 유형 : {{ selected_year }} 년도 {{ selected_grade }} 학년 {{ selected_category }} << 모의고사 일듯
     </h1></div>
 
     <div class="table-container" style="margin-bottom: 250px; text-align: center;">
