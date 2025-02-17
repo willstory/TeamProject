@@ -185,50 +185,6 @@
         {% endif %}
     </div>
   
-    <div class="table-container">
-      {% if exams %}
-          <table class="exam-table">
-              <thead>
-                  <tr>
-                      <th>색인</th>
-                      <th>구분</th>
-                      <th>학년</th>
-                      <th>년도</th>
-                      <th>월</th>
-                      <th>제목</th>
-                      <th>보기</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for exam in exams %}
-                  <tr>
-                      <td>{{ forloop.counter }}</td>
-                      <td>{{ exam.category }}</td>
-                      <td>{{ exam.grade }}</td>
-                      <td>{{ exam.year }}년</td>
-                      <td>{{ exam.month }}월</td>
-                      <td>{{ exam.title }}</td>
-                      <td>
-                          {% if exam.link %}
-                            <a href="{% url 'academy:exam_list_result' %}?year={{ exam.year }}&grade={{ exam.grade }}&month={{ exam.month }}">클릭</a>
-                          {% else %}
-                              -
-                          {% endif %}
-                      </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>
-      {% else %}
-        <div class="section"  style="margin-bottom: 330px;">
-          <p class="no-data-message" style="text-align: center;">조건에 맞는 테이블이 없습니다.</p>
-        </div>   
-      {% endif %}
-      
-       
-  </div>
-
-  
     {% endblock %}
 
     {% block footer %}
