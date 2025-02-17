@@ -6,8 +6,7 @@ app_name = 'academy'
 
 urlpatterns = [
     path('academy_list/', views.academy_list, name='academy_list'),
-    path('academy_list_result/', views.academy_list_result, name='academy_list_result'),
-    path('exam_list_result/', views.exam_list_result, name='exam_list_result'),
+    path('academy_list_result/', views.academy_list_result, name='exam_list_result'),
     #path('create/', views.academy_create, name='academy_create'),
     #path('<int:academy_id>/edit/', views.academy_edit, name='academy_edit'),
     #path('<int:academy_id>/delete/', views.academy_delete, name='academy_delete'),
