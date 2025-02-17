@@ -76,6 +76,8 @@ def academy_list_result(request):
             연도__in=selected_year, 학년__in=selected_grade
         )
                 # 선택된 카테고리에 따라 추가 필터링
+        if selected_month:
+            questions = questions.filter(강__in=selected_month)
         if selected_category:
             questions = questions.filter(유형__in=selected_category)
 
@@ -135,7 +137,8 @@ def academy_list_result(request):
     exams = [{
         'question_list': question_list,
         'question_counter': total_count,  # 총 문제 수
-        'link': None  # 필요에 따라 링크 설정
+        #'link': ['색인']  # 필요에 따라 링크 설정
+        'link': None
     }]
 
     category = '모의고사'
@@ -147,20 +150,36 @@ def academy_list_result(request):
         "grades": grades,
         "years": years,
         "categories": categories,
+        "selected_month" : selected_month,
     }
 
     return render(request, "academy_list_result.html", context)
 
 def exam_list_result(request):
-    selected_year = request.GET.get('year')
-    selected_grade = request.GET.get('grade')
-    selected_month = request.GET.get('month')
+    selected_year = request.GET.getlist('year', [])
+    selected_grade = request.GET.getlist('grade', [])
+    selected_month = [m for m in request.GET.getlist('month', []) if m]
+    selected_category = request.GET.getlist("category", [])
 
-    # 문제 데이터 가져오기
-    if selected_year and selected_grade and selected_month:
-        questions = QuestionData.objects.filter(연도=selected_year, 학년=selected_grade, 강=selected_month)
+    # 필터링된 문제 가져오기
+    if selected_year and selected_grade:
+        questions = QuestionData.objects.filter(
+            연도__in=selected_year, 학년__in=selected_grade
+        )
+                # 선택된 카테고리에 따라 추가 필터링
+        if selected_category:
+            questions = questions.filter(유형__in=selected_category)
+        if selected_month and all(m.isdigit() for m in selected_month):  # 숫자값만 필터링
+            questions = questions.filter(강__in=selected_month)
+
     else:
         questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
+
+    # # 문제 데이터 가져오기
+    # if selected_year and selected_grade and selected_month:
+    #     questions = QuestionData.objects.filter(연도=selected_year, 학년=selected_grade, 강=selected_month)
+    # else:
+    #     questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
 
     # 문제 데이터를 리스트화
     question_data = questions.values('색인', '문제', '지문', '보기')
