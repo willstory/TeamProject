@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Count
+from django.contrib.auth.decorators import login_required
 from .models import QuestionData
 
 
@@ -52,7 +53,8 @@ def academy_list(request):
         "exams": exams,
         "grades": [{"name": grade, "checked": grade in selected_grades} for grade in grades],
         "years": [{"name": year, "checked": str(year) in selected_years} for year in years],
-        "categories": [{"name": category, "checked": category in selected_categories} for category in categories],
+        # "categories": [{"name": category, "checked": category in selected_categories} for category in categories],
+        "categories": [{"name": category, "checked": category}],
         "selected_years": selected_years,
         "selected_grades": selected_grades,
         "selected_categories": selected_categories,
@@ -62,14 +64,23 @@ def academy_list(request):
 
 def academy_list_result(request):
     # 선택된 값 가져오기
-    selected_year = request.GET.get('year')
-    selected_grade = request.GET.get('grade')
-    selected_month = request.GET.get('month')
-    selected_category = request.GET.get('category')
+    selected_year = request.GET.getlist("year", [])
+    selected_grade = request.GET.getlist("grade", [])
+    selected_month = request.GET.get('month', [])
+    selected_category = request.GET.getlist("category", [])
+    
 
     # 필터링된 문제 가져오기
-    if selected_year and selected_grade and selected_month:
-        questions = QuestionData.objects.filter(연도=selected_year, 학년=selected_grade, 강=selected_month)
+    if selected_year and selected_grade:
+        questions = QuestionData.objects.filter(
+            연도__in=selected_year, 학년__in=selected_grade
+        )
+                # 선택된 카테고리에 따라 추가 필터링
+        if selected_month:
+            questions = questions.filter(강__in=selected_month)
+        if selected_category:
+            questions = questions.filter(유형__in=selected_category)
+
     else:
         questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
 
@@ -77,8 +88,12 @@ def academy_list_result(request):
     number_counts = questions.values('번호').annotate(count=Count('번호')).order_by('번호')
 
     # 📌 (번호(개수)) 문자열 리스트 생성
-    question_list = ', '.join(f"{num['번호']}({num['count']})" for num in number_counts)
-    total_count = sum(num['count'] for num in number_counts)  # 총 문제 수 계산
+    # question_list = ', '.join(f"{num['번호']}({num['count']})" for num in number_counts)
+    question_list = [
+    {"번호": num["번호"], "count": num["count"]}
+    for num in number_counts
+]
+    total_count = sum(num['count'] for num in number_counts) if number_counts else 0  # 총 문제 수 계산
 
     # 📌 학년별 문제 수 계산 및 리스트 변환
     grade_counts = QuestionData.objects.values('학년').annotate(count=Count('학년'))
@@ -86,7 +101,8 @@ def academy_list_result(request):
         {
             "name": grade['학년'], 
             "count": grade['count'],
-            "checked": selected_grade == grade['학년']
+            #"checked": selected_grade == grade['학년']
+            "checked": grade['학년'] in selected_grade
         }
         for grade in grade_counts
     ]
@@ -97,7 +113,8 @@ def academy_list_result(request):
         {
             "name": category['유형'], 
             "count": category['count'],
-            "checked": selected_category == category['유형']
+            #"checked": selected_category == category['유형']
+            "checked": category['유형'] in selected_category or not selected_category 
         }
         for category in category_counts
     ]
@@ -108,7 +125,11 @@ def academy_list_result(request):
         {
             "name": year['연도'], 
             "count": year['count'],
-            "checked": str(selected_year) == str(year['연도'])
+            'year': selected_year,
+            'grade': selected_grade,
+            'month': selected_month,
+            #"checked": str(selected_year) == str(year['연도'])
+            "checked": str(year['연도']) in selected_year
         }
         for year in year_counts
     ]
@@ -125,6 +146,7 @@ def academy_list_result(request):
         "exams": exams,
         "selected_year": selected_year,
         "selected_grade": selected_grade,
+        "selected_category": category,
         "grades": grades,
         "years": years,
         "categories": categories,
@@ -132,3 +154,43 @@ def academy_list_result(request):
     }
 
     return render(request, "academy_list_result.html", context)
+
+def exam_list_result(request):
+    selected_year = request.GET.getlist('year', [])
+    selected_grade = request.GET.getlist('grade', [])
+    selected_month = [m for m in request.GET.getlist('month', []) if m]
+    selected_category = request.GET.getlist("category", [])
+
+    # 필터링된 문제 가져오기
+    if selected_year and selected_grade:
+        questions = QuestionData.objects.filter(
+            연도__in=selected_year, 학년__in=selected_grade
+        )
+                # 선택된 카테고리에 따라 추가 필터링
+        if selected_category:
+            questions = questions.filter(유형__in=selected_category)
+        if selected_month and all(m.isdigit() for m in selected_month):  # 숫자값만 필터링
+            questions = questions.filter(강__in=selected_month)
+
+    else:
+        questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
+
+    # # 문제 데이터 가져오기
+    # if selected_year and selected_grade and selected_month:
+    #     questions = QuestionData.objects.filter(연도=selected_year, 학년=selected_grade, 강=selected_month)
+    # else:
+    #     questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
+
+    # 문제 데이터를 리스트화
+    question_data = questions.values('색인', '문제', '지문', '보기')
+    question_answer = questions.values('색인','정답')
+
+    context = {
+        "selected_questions": question_data,
+        "selected_questions_answer": question_answer,
+        "selected_year": selected_year,
+        "selected_grade": selected_grade,
+        "selected_month": selected_month,
+    }
+
+    return render(request, "exam_list_result.html", context)
