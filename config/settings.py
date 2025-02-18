@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-bqvh6de7mk*w9z%ll9mb&o^^4m!q4_@5!p5^d2sa_#2d&i85p4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -141,10 +141,11 @@ USE_TZ = False
 
 # 정적 파일 설정
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/ubuntu/Teamproject/staticfiles/'
+STATIC_ROOT = '/home/ubuntu/TeamProject/staticfiles/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # 프로젝트의 static 폴더
+    BASE_DIR / "config" / "static",  # config 폴더의 static 폴더
 ]
 
 # 미디어 파일 설정
