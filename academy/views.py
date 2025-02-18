@@ -71,7 +71,7 @@ def academy_list_result(request):
     # 선택된 값 가져오기
     selected_year = request.GET.getlist("year", [])
     selected_grade = request.GET.getlist("grade", [])
-    selected_month = request.GET.get('month', [])
+    selected_month = request.GET.getlist('month', [])
     selected_category = request.GET.getlist("category", [])
     
 
