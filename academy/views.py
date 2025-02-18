@@ -3,6 +3,12 @@ from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from .models import QuestionData
 
+from .models import QuestionData
+
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
 
 
 def academy_list(request):
@@ -166,6 +172,43 @@ def exam_list_result(request):
         questions = QuestionData.objects.filter(
             연도__in=selected_year, 학년__in=selected_grade
         )
+        # 선택된 카테고리에 따라 추가 필터링
+        if selected_month:
+            questions = questions.filter(강__in=selected_month)
+        if selected_category:
+            questions = questions.filter(유형__in=selected_category)
+
+    else:
+        questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
+
+    # 문제 데이터를 리스트화
+    question_data = questions.values('색인', '문제', '지문', '보기')
+    question_answer = questions.values('색인','정답')
+
+    context = {
+        "selected_questions": list(question_data), # QuerySet을 list로 변환
+        "selected_questions_answer": list(question_answer), # QuerySet을 list로 변환
+        "selected_year": selected_year[0] if selected_year else '',
+        "selected_grade": selected_grade[0] if selected_grade else '',
+        "selected_month": selected_month[0] if selected_month else '',
+    }
+
+    return render(request, "exam_list_result.html", context)
+
+
+"""
+# 기존에 있는는 코딩한 내용
+def exam_list_result(request):
+    selected_year = request.GET.getlist('year', [])
+    selected_grade = request.GET.getlist('grade', [])
+    selected_month = [m for m in request.GET.getlist('month', []) if m]
+    selected_category = request.GET.getlist("category", [])
+
+    # 필터링된 문제 가져오기
+    if selected_year and selected_grade:
+        questions = QuestionData.objects.filter(
+            연도__in=selected_year, 학년__in=selected_grade
+        )
                 # 선택된 카테고리에 따라 추가 필터링
         if selected_category:
             questions = questions.filter(유형__in=selected_category)
@@ -176,10 +219,10 @@ def exam_list_result(request):
         questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
 
     # # 문제 데이터 가져오기
-    # if selected_year and selected_grade and selected_month:
-    #     questions = QuestionData.objects.filter(연도=selected_year, 학년=selected_grade, 강=selected_month)
-    # else:
-    #     questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
+        if selected_year and selected_grade and selected_month:
+         questions = QuestionData.objects.filter(연도=selected_year, 학년=selected_grade, 강=selected_month)
+        else:
+         questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
 
     # 문제 데이터를 리스트화
     question_data = questions.values('색인', '문제', '지문', '보기')
@@ -191,6 +234,48 @@ def exam_list_result(request):
         "selected_year": selected_year,
         "selected_grade": selected_grade,
         "selected_month": selected_month,
-    }
+    }    
 
     return render(request, "exam_list_result.html", context)
+"""
+    
+
+
+
+def download_pdf(request):
+    # HTTP 응답을 PDF로 설정
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="exam_list.pdf"'
+
+    # PDF 생성
+    pdf = canvas.Canvas(response, pagesize=letter)
+    pdf.setTitle("시험 문제 리스트")
+    
+    y_position = 750  # 초기 y 좌표 (페이지 상단)
+
+    # exam 데이터 (예제, 실제로는 DB에서 가져옴)
+    exams = [
+        {"type": "객관식", "passage": "다음 중 가장 큰 숫자는?", "choices": ["1", "2", "3", "4"]},
+        {"type": "단답형", "passage": "대한민국의 수도는?", "choices": ["서울"]}
+    ]
+
+    pdf.setFont("Helvetica-Bold", 14)
+    pdf.drawString(100, y_position, "시험 문제 리스트")
+    y_position -= 30  # 줄 간격 조정
+
+    pdf.setFont("Helvetica", 12)
+
+    for idx, exam in enumerate(exams, 1):
+        pdf.drawString(100, y_position, f"문제 {idx}: {exam['passage']}")
+        y_position -= 20
+
+        for choice in exam['choices']:
+            pdf.drawString(120, y_position, f"- {choice}")
+            y_position -= 15
+
+        y_position -= 20  # 문제 간격 조정
+
+    pdf.showPage()
+    pdf.save()
+    
+    return response
