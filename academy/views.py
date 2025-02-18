@@ -3,12 +3,11 @@ from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from .models import QuestionData
 
-from .models import QuestionData
-
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 
 def academy_list(request):
@@ -29,7 +28,7 @@ def academy_list(request):
 
     # 학년, 연도 및 유형 데이터베이스에서 가져오기
     grades = QuestionData.objects.values_list('학년', flat=True).distinct()
-    years = QuestionData.objects.values_list('연도', flat=True).distinct()
+    years = sorted(QuestionData.objects.values_list('연도', flat=True).distinct(), reverse=False)  # 내림차순 정렬
     categories = QuestionData.objects.values_list('유형', flat=True).distinct()
 
     # 필요한 필드만 가져오기
@@ -127,6 +126,7 @@ def academy_list_result(request):
 
     # 📌 연도별 문제 수 계산 및 리스트 변환
     year_counts = QuestionData.objects.values('연도').annotate(count=Count('연도'))
+    sorted_years = sorted(year_counts, key=lambda x: x['연도'], reverse=False)  # 연도를 내림차순 정렬
     years = [
         {
             "name": year['연도'], 
@@ -137,14 +137,17 @@ def academy_list_result(request):
             #"checked": str(selected_year) == str(year['연도'])
             "checked": str(year['연도']) in selected_year
         }
-        for year in year_counts
+        for year in sorted_years
     ]
 
     exams = [{
         'question_list': question_list,
         'question_counter': total_count,  # 총 문제 수
         #'link': ['색인']  # 필요에 따라 링크 설정
-        'link': None
+        'link': None,
+        'year': selected_year, # ['2019'] -> 
+        'grade': selected_grade,
+        'month': selected_month,
     }]
 
     category = '모의고사'
@@ -207,38 +210,47 @@ def exam_list_result(request):
 
 
 
+
 def download_pdf(request):
-    # HTTP 응답을 PDF로 설정
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="exam_list.pdf"'
 
-    # PDF 생성
+    # 한글 폰트 등록 (예: 나눔고딕)
+    pdfmetrics.registerFont(TTFont('NanumGothic', 'path/to/NanumGothic.ttf'))
+
     pdf = canvas.Canvas(response, pagesize=letter)
     pdf.setTitle("시험 문제 리스트")
     
-    y_position = 750  # 초기 y 좌표 (페이지 상단)
+    y_position = 750
 
-    # exam 데이터 (예제, 실제로는 DB에서 가져옴)
-    exams = [
-        {"type": "객관식", "passage": "다음 중 가장 큰 숫자는?", "choices": ["1", "2", "3", "4"]},
-        {"type": "단답형", "passage": "대한민국의 수도는?", "choices": ["서울"]}
-    ]
-
-    pdf.setFont("Helvetica-Bold", 14)
+    pdf.setFont("NanumGothic", 14)
     pdf.drawString(100, y_position, "시험 문제 리스트")
-    y_position -= 30  # 줄 간격 조정
+    y_position -= 30
 
-    pdf.setFont("Helvetica", 12)
+    pdf.setFont("NanumGothic", 12)
 
-    for idx, exam in enumerate(exams, 1):
-        pdf.drawString(100, y_position, f"문제 {idx}: {exam['passage']}")
+    selected_questions = request.session.get('selected_questions', [])
+    selected_questions_answer = request.session.get('selected_questions_answer', [])
+
+    for idx, question in enumerate(selected_questions, 1):
+        pdf.drawString(100, y_position, f"문제 {idx}: {question['문제']}")
         y_position -= 20
 
-        for choice in exam['choices']:
-            pdf.drawString(120, y_position, f"- {choice}")
-            y_position -= 15
+        pdf.drawString(120, y_position, f"지문: {question['지문']}")
+        y_position -= 20
 
-        y_position -= 20  # 문제 간격 조정
+        pdf.drawString(120, y_position, f"보기: {question['보기']}")
+        y_position -= 20
+
+        for answer in selected_questions_answer:
+            if answer['색인'] == question['색인']:
+                pdf.drawString(120, y_position, f"정답: {answer['정답']}")
+                break
+        y_position -= 30
+
+        if y_position < 100:  # 페이지 넘김
+            pdf.showPage()
+            y_position = 750
 
     pdf.showPage()
     pdf.save()
