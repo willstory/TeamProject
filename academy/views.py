@@ -161,42 +161,9 @@ def academy_list_result(request):
 
     return render(request, "academy_list_result.html", context)
 
-def exam_list_result(request):
-    selected_year = request.GET.getlist('year', [])
-    selected_grade = request.GET.getlist('grade', [])
-    selected_month = [m for m in request.GET.getlist('month', []) if m]
-    selected_category = request.GET.getlist("category", [])
-
-    # 필터링된 문제 가져오기
-    if selected_year and selected_grade:
-        questions = QuestionData.objects.filter(
-            연도__in=selected_year, 학년__in=selected_grade
-        )
-        # 선택된 카테고리에 따라 추가 필터링
-        if selected_month:
-            questions = questions.filter(강__in=selected_month)
-        if selected_category:
-            questions = questions.filter(유형__in=selected_category)
-
-    else:
-        questions = QuestionData.objects.none()  # 조건이 없을 경우 빈 쿼리셋 반환
-
-    # 문제 데이터를 리스트화
-    question_data = questions.values('색인', '문제', '지문', '보기')
-    question_answer = questions.values('색인','정답')
-
-    context = {
-        "selected_questions": list(question_data), # QuerySet을 list로 변환
-        "selected_questions_answer": list(question_answer), # QuerySet을 list로 변환
-        "selected_year": selected_year[0] if selected_year else '',
-        "selected_grade": selected_grade[0] if selected_grade else '',
-        "selected_month": selected_month[0] if selected_month else '',
-    }
-
-    return render(request, "exam_list_result.html", context)
 
 
-"""
+
 # 기존에 있는는 코딩한 내용
 def exam_list_result(request):
     selected_year = request.GET.getlist('year', [])
@@ -237,8 +204,6 @@ def exam_list_result(request):
     }    
 
     return render(request, "exam_list_result.html", context)
-"""
-    
 
 
 
