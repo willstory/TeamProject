@@ -1,122 +1,47 @@
-<!DOCTYPE html>
-<!-- templates/academy_list.html -->
-
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>학원 찾기</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Add Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="TeamProject\config\static\css\style.css"> 
-  
-</head>
-
-<body>
-  <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-        <a class="nav-link active" href="{% url 'index' %}"><i class="fas fa-home me-1"></i>
-            학원의 민족
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="http://127.0.0.1:8000/academy_list"><i class="fas fa-school me-1"></i>문제 리스트</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="http://127.0.0.1:8000/academy_list_result"><i class="fas fa-school me-1"></i>문제 클릭 시 이동 페이지</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ms-3">
-                {% if user.is_authenticated %}
-                    {% if user.is_academy %}
-                        <li class="nav-item">
-                            <a class="nav-link text-danger fw-bold" href="{% url 'acad:dashboard' %}">학원관리자</a>
-                        </li>
-                    {% else %}
-                        <!-- 학생일 경우 다른 메뉴를 추가할 수 있습니다. -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'course:my_courses' %}">내 강의실</a>
-                        </li>
-                    {% endif %}
-                {% endif %}
-            </ul>                
-            <div class="d-flex align-items-center gap-2">
-                {% if user.is_authenticated %}
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user me-1"></i>{{ user.username }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{% url 'member:profile_view' %}" style="font-weight: 500;">프로필</a></li>
-                            <li><a class="dropdown-item" href="#" style="font-weight: 500;">메시지 박스</a></li>
-                            <li>
-                                <form method="post" action="{% url 'logout' %}" class="m-0">
-                                    {% csrf_token %}
-                                    <button class="dropdown-item" type="submit" style="font-weight: 500;">로그아웃</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <a class="btn btn-primary small-btn" href="{% url 'login' %}"><i class="fas fa-sign-in-alt me-1"></i>로그인</a>
-                    <a class="btn btn-outline-primary small-btn" href="{% url 'register' %}"><i class="fas fa-user-plus me-1"></i>회원가입</a>
-                {% endif %}
-            </div>
-            
-            <form class="d-flex search-bar ms-3" role="search" action="#" method="get">
-                <div class="input-group">
-                    <input class="form-control" type="search" id='searchInput' placeholder="검색하기..." aria-label="Search" name="query">
-                    <button class="btn btn-primary" type="submit"><i class="fas fa-search me-1"></i></button>
-                </div>
-            </form>
-        </div>
-    </div>
-</nav>
-
-  {% block content %}
+{% extends 'base.html' %}
+{% block content %}
 <body>
   <div class="container">
         <!-- 구분 -->
         <div class="section" style="margin-top: 50px;">
             <label><b>구분 : </b></label>
             {% for category in categories %}
-                <input type="checkbox" id="category_{{ forloop.counter }}" class="screen-reader" {% if category.checked %}checked{% endif %}>
+                <input type="checkbox" id="category_{{ forloop.counter }}" class="screen-reader filter-checkbox" 
+                data-filter="grade" value="{{ grade.name }}" {% if category.checked %}checked{% endif %}
+                onchange="filterExams()">
                 <label class="label-box" for="category_{{ forloop.counter }}">
                     <span class="check-icon" aria-hidden="true"></span>
                 {{ category.name }} ({{ category.count }})
+                </label>
             {% endfor %}
         </div>
-
             <!-- 학년 -->
             <div class="section">
                 <label><b>학년 : </b></label>
                 {% for grade in grades %}
-                    <input type="checkbox" id="grade_{{ forloop.counter }}" class="screen-reader" {% if grade.checked %}checked{% endif %}>
-                    <label class="label-box" for="grade_{{ forloop.counter }}">
-                        <span class="check-icon" aria-hidden="true"></span>
-                    {{ grade.name }} ({{ grade.count }})
-                {% endfor %}
+                <input type="checkbox" id="grade_{{ forloop.counter }}" class="screen-reader filter-checkbox"
+                    data-filter="grade" value="{{ grade.name }}" {% if grade.checked %}checked{% endif %}
+                    onchange="filterExams()">
+                <label class="label-box" for="grade_{{ forloop.counter }}">
+                    <span class="check-icon" aria-hidden="true"></span> {{ grade.name }}
+                </label>
+            {% endfor %}
             </div>
-
             <!-- 년도 -->
             <div class="section" style="margin-bottom: 100px;">
                 <label><b>년도 : </b></label>
                 {% for year in years %}
-                    <input type="checkbox" id="year_{{ forloop.counter }}" class="screen-reader" {% if year.checked %}checked{% endif %}>
-                    <label class="label-box" for="year_{{ forloop.counter }}">
-                        <span class="check-icon" aria-hidden="true"></span>
-                    {{ year.name }} ({{ year.count }})
-                {% endfor %}
+                <input type="checkbox" id="year_{{ forloop.counter }}" class="screen-reader filter-checkbox"
+                    data-filter="year" value="{{ year.name }}" {% if year.checked %}checked{% endif %}
+                    onchange="filterExams()">
+                <label class="label-box" for="year_{{ forloop.counter }}">
+                    <span class="check-icon" aria-hidden="true"></span> {{ year.name }}
+                </label>
+            {% endfor %}
             </div>
     
         <div class="section" style="margin-bottom: 200px; text-align: center;"><h1>
-            선택한 문제 유형 : {{ selected_year }} 년도 {{ selected_grade }} 학년 {{ selected_category }} << 모의고사 일듯
+            선택한 문제 유형 : {{ selected_year }} 년도 {{ selected_grade }} 학년 {{ selected_category }}
     </h1></div>
 
     <div class="table-container" style="margin-bottom: 250px; text-align: center;">
@@ -137,11 +62,10 @@
                       <td>{{ exam.question_list }}</td>
                       <td>{{ exam.question_counter }}</td>
                       <td>
-                          {% if exam.link %}
-                          <!--PDF 다운로드 부분 화면으로 이동해야 하는 링크--> 
-                            <a href="{% url 'exam_list_result' %}">PDF</a>
+                        {% if exam.question_counter > 0 or exam.link %}  
+                        <a href="{% url 'academy:exam_list_result' %}?year={{ exam.year|join:',' }}&grade={{ exam.grade|join:',' }}&month={{ exam.month|join:',' }}">PDF 문제</a>
                           {% else %}
-                              -
+                           -
                           {% endif %}
                       </td>
                   </tr>
