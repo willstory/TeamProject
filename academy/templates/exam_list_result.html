@@ -1,155 +1,28 @@
-<!DOCTYPE html>
-<!-- templates/academy_list.html -->
-
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>학원 찾기</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Add Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="TeamProject\config\static\css\style.css"> 
-  
-</head>
-
-<body>
-  <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-        <a class="nav-link active" href="{% url 'index' %}"><i class="fas fa-home me-1"></i>
-            학원의 민족
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'academy:academy_list' %}"><i class="fas fa-school me-1"></i>문제 리스트</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'academy:academy_list_result' %}"><i class="fas fa-school me-1"></i>문제 클릭 시 이동 페이지</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ms-3">
-                {% if user.is_authenticated %}
-                    {% if user.is_academy %}
-                        <li class="nav-item">
-                            <a class="nav-link text-danger fw-bold" href="{% url 'acad:dashboard' %}">학원관리자</a>
-                        </li>
-                    {% else %}
-                        <!-- 학생일 경우 다른 메뉴를 추가할 수 있습니다. -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'course:my_courses' %}">내 강의실</a>
-                        </li>
-                    {% endif %}
-                {% endif %}
-            </ul>                
-            <div class="d-flex align-items-center gap-2">
-                {% if user.is_authenticated %}
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user me-1"></i>{{ user.username }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{% url 'member:profile_view' %}" style="font-weight: 500;">프로필</a></li>
-                            <li><a class="dropdown-item" href="#" style="font-weight: 500;">메시지 박스</a></li>
-                            <li>
-                                <form method="post" action="{% url 'logout' %}" class="m-0">
-                                    {% csrf_token %}
-                                    <button class="dropdown-item" type="submit" style="font-weight: 500;">로그아웃</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <a class="btn btn-primary small-btn" href="{% url 'login' %}"><i class="fas fa-sign-in-alt me-1"></i>로그인</a>
-                    <a class="btn btn-outline-primary small-btn" href="{% url 'register' %}"><i class="fas fa-user-plus me-1"></i>회원가입</a>
-                {% endif %}
-            </div>
-            
-            <form class="d-flex search-bar ms-3" role="search" action="#" method="get">
-                <div class="input-group">
-                    <input class="form-control" type="search" id='searchInput' placeholder="검색하기..." aria-label="Search" name="query">
-                    <button class="btn btn-primary" type="submit"><i class="fas fa-search me-1"></i></button>
-                </div>
-            </form>
-        </div>
-    </div>
-</nav>
-
-  {% block content %}
-<body>
-  
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-        }
-        .question-box {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .question-box h3 {
-            margin: 0 0 10px;
-        }
-        .question-box p {
-            margin: 5px 0;
-        }
-        .options {
-            list-style-type: none;
-            padding: 0;
-        }
-        .options li {
-            padding: 5px;
-            background: #fff;
-            border: 1px solid #ddd;
-            margin: 5px 0;
-            border-radius: 3px;
-        }
-        .download-btn {
-            margin-top: 20px;
-            text-align: center;
-        }
-    </style>
-
-    {% include "navbar.html" %}
-    <div class="container">
-        <h1>시험 문제 목록</h1>
-
-        {% if selected_questions %}
-            {% for question in selected_questions %}
-                <div class="question-box">
-                    <h3>문제 {{ forloop.counter }}</h3>
-                    <p><strong>지문:</strong> {{ question.지문 }}</p>
-                    <p><strong>문제:</strong> {{ question.문제 }}</p>
-                    <p><strong>보기:</strong> {{ question.보기 }}</p>
-                    {% for answer in selected_questions_answer %}
-                        {% if answer.색인 == question.색인 %}
-                            <p><strong>정답:</strong> {{ answer.정답 }}</p>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>해당하는 문제가 없습니다.</p>
-        {% endif %}
-
-        <div class="mt-3">
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>시험 문제 목록</h1>
+        <div class="mt-3" style="margin-bottom: 50px; text-align: center;"></div><h3>
             <p><strong>선택한 년도:</strong> {{ selected_year }}</p>
             <p><strong>선택한 학년:</strong> {{ selected_grade }}</p>
             <p><strong>선택한 월:</strong> {{ selected_month }}</p>
-        </div>
-    </div>
-    {% include "footer.html" %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+        </h3></div>
+    {% if selected_questions %}
+        {% for question in selected_questions %}
+            <div class="question-box" style="margin-bottom: 50px;">
+                <h3>문제 {{ forloop.counter }}</h3>
+                <p><strong>지문:</strong> {{ question.지문 }}</p>
+                <p><strong>문제:</strong> {{ question.문제 }}</p>
+                <p><strong>보기:</strong> {{ question.보기 }}</p>
+                {% for answer in selected_questions_answer %}
+                    {% if answer.색인 == question.색인 %}
+                        <p><strong>정답:</strong> {{ answer.정답 }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>해당하는 문제가 없습니다.</p>
+    {% endif %}
+</div>
+{% endblock %}
