@@ -71,7 +71,7 @@ def academy_list_result(request):
     # 선택된 값 가져오기
     selected_year = request.GET.getlist("year", [])
     selected_grade = request.GET.getlist("grade", [])
-    selected_month = request.GET.get('month', [])
+    selected_month = request.GET.getlist('month', [])
     selected_category = request.GET.getlist("category", [])
     
 
@@ -113,7 +113,7 @@ def academy_list_result(request):
     ]
 
     # 📌 유형별 문제 수 계산 및 리스트 변환
-    category_counts = QuestionData.objects.values('유형').annotate(count=Count('유형'))
+    category_counts = QuestionData.objects.filter(연도__in=selected_year, 강__in=selected_month).values('유형').annotate(count=Count('유형'))
     categories = [
         {
             "name": category['유형'], 
