@@ -166,7 +166,7 @@ def academy_list_result(request):
 
 
 
-
+@login_required
 # 기존에 있는는 코딩한 내용
 def exam_list_result(request):
     selected_year = request.GET.getlist('year', [])
@@ -210,7 +210,7 @@ def exam_list_result(request):
 
 
 
-
+@login_required
 def download_pdf(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="exam_list.pdf"'
