@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-bqvh6de7mk*w9z%ll9mb&o^^4m!q4_@5!p5^d2sa_#2d&i85p4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -83,27 +83,27 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 load_dotenv()
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'teamproject',  # 데이터베이스 이름
-#         'USER': 'postgres',  # PostgreSQL 사용자
-#         'PASSWORD': '1',   # 비밀번호
-#         'HOST': 'localhost',           # 데이터베이스 서버 주소 (로컬에서 실행 중일 경우 'localhost' 사용)
-#         'PORT': '5432',                # PostgreSQL 기본 포트
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME"),  # 데이터베이스 이름
-        'USER': os.getenv("DB_USER"),  # PostgreSQL 사용자
-        'PASSWORD': os.getenv("DB_PASSWORD"),   # 비밀번호
-        'HOST': os.getenv("DB_HOST"),           # 데이터베이스 서버 주소 (로컬에서 실행 중일 경우 'localhost' 사용)
-        'PORT': os.getenv("DB_PORT"),                # PostgreSQL 기본 포트
+        'NAME': 'teamproject',  # 데이터베이스 이름
+        'USER': 'postgres',  # PostgreSQL 사용자
+        'PASSWORD': '1',   # 비밀번호
+        'HOST': 'localhost',           # 데이터베이스 서버 주소 (로컬에서 실행 중일 경우 'localhost' 사용)
+        'PORT': '5432',                # PostgreSQL 기본 포트
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv("DB_NAME"),  # 데이터베이스 이름
+#         'USER': os.getenv("DB_USER"),  # PostgreSQL 사용자
+#         'PASSWORD': os.getenv("DB_PASSWORD"),   # 비밀번호
+#         'HOST': os.getenv("DB_HOST"),           # 데이터베이스 서버 주소 (로컬에서 실행 중일 경우 'localhost' 사용)
+#         'PORT': os.getenv("DB_PORT"),                # PostgreSQL 기본 포트
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -141,10 +141,11 @@ USE_TZ = False
 
 # 정적 파일 설정
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/ubuntu/Teamproject/staticfiles/'
+STATIC_ROOT = '/home/ubuntu/TeamProject/staticfiles/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # 프로젝트의 static 폴더
+    BASE_DIR / "config" / "static",  # config 폴더의 static 폴더
 ]
 
 # 미디어 파일 설정
