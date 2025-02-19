@@ -42,7 +42,7 @@
     <div class="header">
         <h1>시험 문제 목록</h1>
         <h3>
-            <p><strong>{{ selected_year }}년도 {{ selected_grade }}학년 {{ selected_month }}월</strong></p>
+            <p><strong>{{ selected_year|join:',' }}년도 {{ selected_grade|join:',' }}학년 {{ selected_month|join:',' }}월</strong></p>
         </h3>
     </div>
 
@@ -52,7 +52,9 @@
                 <h3>문제 {{ forloop.counter }}</h3>
                 <p><strong>지문:</strong> {{ question.지문 }}</p>
                 <p><strong>문제:</strong> {{ question.문제 }}</p>
+                {% if question.보기 %}
                 <p><strong>보기:</strong> {{ question.보기 }}</p>
+                {% endif %}
             </div>
         {% endfor %}
     {% else %}
