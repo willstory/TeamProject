@@ -44,6 +44,11 @@ class CustomLoginView(LoginView):
     def form_valid(self, form):
         user = form.get_user()
         auth_login(self.request, user)
+
+        # 'next' 값이 있으면 해당 페이지로 리디렉션
+        next_url = self.request.GET.get('next') or self.request.POST.get('next')
+        if next_url:
+            return redirect(next_url)
         
         # 사용자 유형에 따라 리디렉션
         if user.is_academy:
